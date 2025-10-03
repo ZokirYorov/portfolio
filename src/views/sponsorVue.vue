@@ -8,15 +8,15 @@
           >
             <div class="flex items-center w-full h-full text-[#3366FF99]">
               <span
-                class="w-[180px] cursor-pointer hover:bg-[#3366FF] hover:text-white rounded-bl rounded-tl flex justify-center border-r-2 border-[#E0E7FF] items-center h-full"
+                class="w-[180px] cursor-pointer hover:bg-blue-700 hover:text-white rounded-bl rounded-tl flex justify-center border-r-2 border-[#E0E7FF] items-center h-full"
                 ><router-link to="/dashboard">Dashboard</router-link></span
               >
               <span
-                class="w-[180px] cursor-pointer hover:bg-[#3366FF] hover:text-white flex justify-center h-full items-center"
+                class="w-[180px] cursor-pointer bg-[#3366FF] text-white hover:bg-blue-700 hover:text-white flex justify-center h-full items-center"
                 ><router-link to="/sponsor">Homiylar</router-link></span
               >
               <span
-                class="w-[180px] cursor-pointer hover:bg-[#3366FF] hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] h-full items-center"
+                class="w-[180px] cursor-pointer hover:bg-blue-700 hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] h-full items-center"
                 ><router-link to="/student">Talabalar</router-link></span
               >
             </div>
@@ -162,7 +162,7 @@
       >
         <div class="w-[560px] h-[560px] items-start bg-white rounded-lg flex flex-col p-6 gap-4">
           <div class="flex items-center w-full justify-between">
-            <h2>Filter</h2>
+            <h2 class="font-medium text-xl">Filter</h2>
             <button
               @click="filterClose()"
               class="cursor-pointer flex"
@@ -172,10 +172,9 @@
           </div>
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="flex flex-col w-full">
-            <label class="mb-2 font-semibold" for="status">ARIZA HOLATI</label>
+            <label class="mb-2 font-semibold uppercase" for="status">Ariza holati</label>
             <select
               id="status"
-              v-model="selectedStatus"
               class="border rounded-lg bg-[#E0E7FF33] border border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option
@@ -188,50 +187,52 @@
             </select>
           </div>
           <div class="w-full flex gap-4 items-start flex-col">
-            <h2 class="mb-2 font-semibold">HOMIYLIK SUMMASI</h2>
+            <h2 class="mb-2 font-semibold uppercase">Homiylik summasi</h2>
             <div class="grid grid-cols-4 w-full gap-3">
               <button type="button"
-                      class="flex items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
+                      class="flex cursor-pointer items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
               >
                 Barchasi
               </button>
-              <div
-                class="flex bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
+              <button
+                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
                 >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </div>
-              <div
-                class="flex bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
+              </button>
+              <button
+                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
               >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </div>
-              <div
-                class="flex bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
+              </button>
+              <button
+                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
               >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </div>
-              <div
-                class="flex bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
+              </button>
+              <button
+                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
               >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </div>
+              </button>
             </div>
           </div>
           <div class="w-full flex gap-2 items-start flex-col">
-            <h2 class="mb-2 font-semibold">Sana</h2>
+            <h2 class="mb-2 font-semibold uppercase">Sana</h2>
             <input class="w-[250px] h-[42px] rounded bg-[#E0E7FF33] p-[10px] border border-[#E0E7FF]" type="date">
           </div>
           <span class="w-full h-1 bg-[#F5F5F7]"></span>
           <div class="flex items-center gap-4 h-[40px] justify-end w-full">
-            <button class="flex text-[#B2B7C1] cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2">
+            <button class="flex text-[#B2B7C1] hover:bg-gray-100 cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2">
               <img src="@/assets/clear.png" alt=""> Tozalash</button>
-            <button class="flex cursor-pointer text-white rounded px-8 py-2 gap-[10px] bg-[#3366FF]"><img src="@/assets/eye2.png" alt="">Natijalarni ko'rish</button>
+            <button class="flex cursor-pointer text-white rounded px-8 py-2 gap-[10px] hover:bg-blue-400 bg-[#3366FF]"><img src="@/assets/eye2.png" alt="">Natijalarni ko'rish</button>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import { useRouter } from 'vue-router'
+const router = useRouter();
 const filterVisible = ref(false);
 const formVisible = () => {
   filterVisible.value = true
@@ -243,19 +244,25 @@ const filterClose = () => {
 
 const menuItems = [
   {
+    id: 1,
     label: "Barchasi",
     value: 'barchasi',
   },
   {
+    id: 2,
     label: "Yangi",
     value: 'yangi',
   },
   {
+    id: 3,
     label: "Moderatsiya",
     value: 'moderatsiy',
   }
 ]
 
+const clickSponsor = () => {
+  router.push('/sponsors')
+}
 </script>
 
 <style scoped>

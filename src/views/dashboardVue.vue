@@ -6,9 +6,9 @@
           <div class="flex justify-between w-full h-full">
             <div class="flex items-center justify-between w-[540px] rounded border-2 border-[#E0E7FF]">
               <div class="flex items-center w-full text-[#3366FF99]">
-                <span class="w-[180px] h-[40px] cursor-pointer hover:bg-[#3366FF] hover:text-white rounded-bl rounded-tl flex justify-center border-r-2 border-[#E0E7FF] items-center"><router-link to="/dashboard">Dashboard</router-link></span>
-                <span class="w-[180px] h-[40px] cursor-pointer hover:bg-[#3366FF] hover:text-white flex justify-center items-center"><router-link to="/sponsor">Homiylar</router-link></span>
-                <span class="w-[180px] h-[40px] cursor-pointer hover:bg-[#3366FF] hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] items-center"><router-link to="/student">Talabalar</router-link></span></div>
+                <span class="w-[180px] h-[40px] cursor-pointer bg-[#3366FF] hover:bg-blue-700 text-white rounded-bl rounded-tl flex justify-center border-r-2 border-[#E0E7FF] items-center"><router-link to="/dashboard">Dashboard</router-link></span>
+                <span class="w-[180px] h-[40px] cursor-pointer hover:bg-blue-700 hover:text-white flex justify-center items-center"><router-link to="/sponsor">Homiylar</router-link></span>
+                <span class="w-[180px] h-[40px] cursor-pointer hover:bg-blue-700 hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] items-center"><router-link to="/student">Talabalar</router-link></span></div>
             </div>
             <div class="flex h-full w-[420px] items-center justify-between">
               <div class="flex rounded w-[280px] p-2 gap-2 bg-[#E8E8E8] items-center">

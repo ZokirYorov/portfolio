@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import DashboardVue from '../views/dashboardVue.vue'
-import Sponsor from '@/components/FSponsor.vue'
+import SponsorForm from '@/components/sponsorForm.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -24,7 +24,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/sponsors',
         name: 'Sponsors',
-        component: Sponsor,
+        component: SponsorForm,
       },
       {
         path: '/student',
