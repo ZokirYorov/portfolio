@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col bg-[#F5F5F7]">
+  <div class="flex flex-col min-h-screen bg-[#F5F5F7]">
     <Header/>
-    <div class="flex h-full w-7xl py-10 m-auto container bg-[#F5F5F7]">
+    <div class="flex h-full min-h-screen w-full">
       <router-view/>
     </div>
   </div>
