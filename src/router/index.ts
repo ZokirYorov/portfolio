@@ -1,6 +1,4 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
-import DashboardVue from '../views/dashboardVue.vue'
-import SponsorForm from '@/components/sponsorForm.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -8,35 +6,45 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Main',
     redirect: '/dashboard',
-    component: () => import('../views/Layouts.vue'),
+    component: () => import((`../views/Layouts.vue`)),
     meta: {requiresAuth: true},
     children: [
       {
         path: '/dashboard',
         name: 'Dashboard',
-        component: DashboardVue,
+        component: () => import((`../views/DashboardVue.vue`)),
       },
       {
         path: '/sponsor',
         name: 'Sponsor',
-        component: () => import('../views/sponsorVue.vue'),
+        component: () => import((`../views/sponsorVue.vue`)),
       },
       {
         path: '/sponsors',
         name: 'Sponsors',
-        component: SponsorForm,
+        component: () => import(('../components/AddSponsor.vue')),
       },
       {
         path: '/student',
         name: 'Student',
-        component: () => import('../views/studentsVue.vue')
+        component: () => import((`../views/studentsVue.vue`))
+      },
+      {
+        path: '/addStudent',
+        name: 'AddStudent',
+        component: () => import((`../components/AddStudent.vue`)),
+      },
+      {
+        path: "/students",
+        name: "Students",
+        component: () => import((`../components/StudentInfo.vue`)),
       }
     ]
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/loginVue.vue'),
+    component: () => import((`../views/loginVue.vue`)),
   },
 ]
 const router = createRouter({

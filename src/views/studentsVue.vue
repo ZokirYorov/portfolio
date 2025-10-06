@@ -1,28 +1,148 @@
 <template>
-  <div class="w-full">
+  <div class="flex flex-col h-full w-full">
     <div class="flex flex-col bg-gray-50 h-[88px] w-full">
-      <div class="flex w-7xl m-auto pt-5 h-[88px]">
+      <div class="flex w-7xl m-auto pt-5 h-full">
         <div class="flex justify-between w-full h-[40px]">
-          <div class="flex items-center justify-between w-[540px] rounded border-2 border-[#E0E7FF]">
+          <div
+            class="flex items-center justify-between w-[540px] rounded border-2 border-[#E0E7FF]"
+          >
             <div class="flex items-center w-full h-full text-[#3366FF99]">
-              <span class="w-[180px] cursor-pointer hover:bg-[#3366FF] hover:text-white rounded-bl rounded-tl flex justify-center border-r-2 border-[#E0E7FF] items-center h-full"><router-link to="/dashboard">Dashboard</router-link></span>
-              <span class="w-[180px] cursor-pointer hover:bg-[#3366FF] hover:text-white flex justify-center h-full items-center"><router-link to="/sponsor">Homiylar</router-link></span>
-              <span class="w-[180px] cursor-pointer hover:bg-[#3366FF] hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] h-full items-center"><router-link to="/student">Talabalar</router-link></span></div>
+              <span
+                class="w-[180px] cursor-pointer hover:bg-blue-700 hover:text-white rounded-bl rounded-tl flex justify-center border-r-2 border-[#E0E7FF] items-center h-full"
+                ><router-link to="/dashboard">Dashboard</router-link></span
+              >
+              <span
+                class="w-[180px] cursor-pointer hover:bg-blue-700 hover:text-white flex justify-center h-full items-center"
+                ><router-link to="/sponsor">Homiylar</router-link></span
+              >
+              <span
+                class="w-[180px] cursor-pointer bg-[#3366FF] text-white hover:bg-blue-700 hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] h-full items-center"
+                ><router-link to="/student">Talabalar</router-link></span
+              >
+            </div>
           </div>
           <div class="flex h-full w-[420px] items-center justify-between">
             <div class="flex rounded w-[280px] p-2 gap-2 bg-[#E8E8E8] items-center">
-              <img src="@/assets/search.png" alt="">
-              <input
-                class="text-[#B1B1B8] w-full"
-                type="text"
-                placeholder="Izlash"
-              >
+              <img src="@/assets/search.png" alt="" />
+              <input class="text-[#B1B1B8] w-full" type="text" placeholder="Izlash" />
             </div>
             <button
               class="bg-[#EDF1FD] rounded justify-center items-center gap-4 w-[120px] h-full cursor-pointer flex"
-              type="button">
-              <img src="@/assets/filter.png" alt="">
+              type="button"
+              @click="visibleForm"
+            >
+              <img src="@/assets/filter.png" alt="" />
               <span class="text-[#3365FC]">Filter</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-7xl flex m-auto justify-end my-7 h-[42px]">
+      <button class="right-10 flex bg-[#3366FF] hover:bg-blue-700 cursor-pointer w-[190px] items-center justify-center text-white rounded"
+              @click="addStudentItem"
+      >+ Talaba qo'shish</button>
+    </div>
+    <div class="flex flex-col w-7xl m-auto items-center justify-center h-full">
+      <div class="flex w-full h-full">
+        <table class="w-full h-full border-separate border-spacing-y-[12px]">
+          <colgroup>
+            <col style="width: 1%" />
+            <col style="width: 14%" />
+            <col style="width: 8%" />
+            <col style="width: 14%" />
+            <col style="width: 14%" />
+            <col style="width: 10%" />
+            <col style="width: 8%" />
+          </colgroup>
+
+          <thead class="bg-gray-100 font-500 text-[#B1B1B8]">
+            <tr class="h-10">
+              <th class="px-2 text-center">#</th>
+              <th class="px-2 text-left">F.I.SH</th>
+              <th class="px-2 text-center">TALABALIK TURI</th>
+              <th class="px-2 text-center">OTM</th>
+              <th class="px-2 text-center">AJRATILINGAN SUMMA</th>
+              <th class="px-2 text-center">KONTRAKT MIQDORI</th>
+              <th class="px-2 text-center">AMALLAR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="(item, index) in getStudentsAll"
+              :key="index"
+              class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
+            >
+              <td class="px-2">{{ index + 1 }}</td>
+              <td class="px-2 text-left">{{ item.full_name }}</td>
+              <td class="px-2 text-center">{{ item.type }}</td>
+              <td class="px-2 text-center">{{ item.institute.name }}</td>
+              <td class="px-2 items-center flex h-full justify-center gap-2">{{ item.given }}<span>UZS</span></td>
+              <td class="px-2 text-center">{{item.contract}}</td>
+              <td class="px-2 text-center">
+                <button type="button" class="cursor-pointer" @click="studentClick">
+                  <img src="@/assets/eye.png" alt="" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div
+        class="w-full bg-black/50 z-50 fixed inset-0 lex flex items-center justify-center"
+        v-if="filterVisible"
+        @click.self="filterVisible = false"
+      >
+        <div class="w-[560px] h-[390px] items-start bg-white rounded-lg flex flex-col p-6 gap-6">
+          <div class="flex items-center w-full justify-between">
+            <h2 class="font-medium text-xl">Filter</h2>
+            <button @click="closeForm()" class="cursor-pointer flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                class="w-7 h-7 text-[#B2B7C1] transition-colors duration-300 ease-linear hover:text-red-600"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z"
+                />
+              </svg>
+            </button>
+          </div>
+          <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
+          <div class="flex flex-col w-full">
+            <label class="mb-2 font-semibold uppercase" for="status">Talabalik turi</label>
+            <select
+              id="status"
+              class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option v-for="item in menuItems" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <div class="flex flex-col w-full">
+            <label class="mb-2 font-semibold uppercase" for="status">Otm</label>
+            <select
+              id="status"
+              class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option v-for="item in menuItems" :key="item.value" :value="item.value">
+                {{ item.label }}
+              </option>
+            </select>
+          </div>
+          <span class="w-full h-1 bg-[#F5F5F7]"></span>
+          <div class="flex items-center gap-4 h-[40px] justify-end w-full">
+            <button
+              class="flex text-[#3366FF] hover:bg-gray-100 cursor-pointer rounded w-[145px] border border-[#3366FF] gap-1 h-[40px] items-center justify-center px-8 py-2"
+            >
+              <img class="text-[#3366FF]" src="@/assets/clear2.png" alt="" /> Tozalash
+            </button>
+            <button
+              class="flex cursor-pointer text-white rounded px-8 py-2 gap-[10px] hover:bg-blue-400 bg-[#3366FF]"
+            >
+              <img src="@/assets/eye2.png" alt="" />Natijalarni ko'rish
             </button>
           </div>
         </div>
@@ -32,6 +152,37 @@
 </template>
 
 <script setup lang="ts">
+import ApiService from '@/service/ApiService.ts'
+import { ref, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const getStudentsAll = ref([]);
+const filterVisible = ref(false);
+
+const visibleForm = () => {
+  filterVisible.value = true
+}
+const closeForm = () => {
+  filterVisible.value = false
+}
+
+const addStudentItem = () => {
+  router.push('/addStudent')
+}
+
+const studentClick = () => {
+  router.push('/students')
+}
+const allStudents = async () => {
+  const response = await ApiService.getAllStudents()
+  getStudentsAll.value = response.results
+  console.log(response)
+}
+
+onMounted(() => {
+  allStudents()
+})
 </script>
 
 <style scoped></style>

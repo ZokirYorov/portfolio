@@ -24,7 +24,13 @@
           <div class="flex h-full w-[420px] items-center justify-between">
             <div class="flex rounded w-[280px] p-2 gap-2 bg-[#E8E8E8] items-center">
               <img src="@/assets/search.png" alt="" />
-              <input class="text-[#B1B1B8] w-full" type="text" placeholder="Izlash" />
+              <input
+                class="text-[#B1B1B8] w-full p-1"
+                type="text"
+                v-model="searchText"
+                placeholder="Izlash"
+                @keyup.enter="sponsorSearch"
+              />
             </div>
             <button
               @click="formVisible()"
@@ -35,7 +41,6 @@
               <span class="text-[#3365FC]">Filter</span>
             </button>
           </div>
-          <router-link class="p-2 items-center justify-center rounded bg-gray-200" to="/sponsors">Sponsor</router-link>
         </div>
       </div>
     </div>
@@ -66,88 +71,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50">
-              <td class="px-2">1</td>
-              <td class="px-2 text-left">Amonov Ilhom Aliyevich</td>
-              <td class="px-2 text-center">+99890 123-45-67</td>
-              <td class="px-2 text-center">1 000 000 <span>UZS</span></td>
-              <td class="px-2 text-center">0 <span>UZS</span></td>
-              <td class="px-2 text-center">20.23.2022</td>
-              <td class="px-2 text-center text-[#5BABF2]">Yangi</td>
+            <tr
+              v-for="(sponsor, index) in sponsorList"
+              :key="index"
+              class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
+            >
+              <td class="px-2">{{ index + 1 }}</td>
+              <td class="px-2 text-left">{{ sponsor.full_name }}</td>
+              <td class="px-2 text-center">{{ sponsor.phone }}</td>
+              <td class="px-2 flex items-center justify-center gap-2 h-full">{{ sponsor.sum }}<span>UZS</span></td>
+              <td class="px-2 text-center">{{ sponsor.spent }}<span>UZS</span></td>
+              <td class="px-2 text-center">{{ formatDate(sponsor.created_at) }}</td>
+              <td class="px-2 text-center text-[#5BABF2]">{{ sponsor.get_status_display }}</td>
               <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer"
-                        @click="clickSponsor()"
-                >
-                  <img src="@/assets/eye.png" alt="" />
-                </button>
-              </td>
-            </tr>
-            <tr class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50">
-              <td class="px-2">2</td>
-              <td class="px-2 text-left">Amonov Ilhom Aliyevich</td>
-              <td class="px-2 text-center">+99890 123-45-67</td>
-              <td class="px-2 text-center">1 000 000 <span>UZS</span></td>
-              <td class="px-2 text-center">0 <span>UZS</span></td>
-              <td class="px-2 text-center">20.23.2022</td>
-              <td class="px-2 text-center text-[#5BABF2]">Moderatsiya</td>
-              <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer">
-                  <img src="@/assets/eye.png" alt="" />
-                </button>
-              </td>
-            </tr>
-            <tr class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50">
-              <td class="px-2">4</td>
-              <td class="px-2 text-left">Amonov Ilhom Aliyevich</td>
-              <td class="px-2 text-center">+99890 123-45-67</td>
-              <td class="px-2 text-center">1 000 000 <span>UZS</span></td>
-              <td class="px-2 text-center">0 <span>UZS</span></td>
-              <td class="px-2 text-center">20.23.2022</td>
-              <td class="px-2 text-center text-[#5BABF2]">Tasdiqlangan</td>
-              <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer">
-                  <img src="@/assets/eye.png" alt="" />
-                </button>
-              </td>
-            </tr>
-            <tr class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50">
-              <td class="px-2">4</td>
-              <td class="px-2 text-left">Amonov Ilhom Aliyevich</td>
-              <td class="px-2 text-center">+99890 123-45-67</td>
-              <td class="px-2 text-center">1 000 000 <span>UZS</span></td>
-              <td class="px-2 text-center">0 <span>UZS</span></td>
-              <td class="px-2 text-center">20.23.2022</td>
-              <td class="px-2 text-center text-[#5BABF2]">Moderatsiya</td>
-              <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer">
-                  <img src="@/assets/eye.png" alt="" />
-                </button>
-              </td>
-            </tr>
-            <tr class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50">
-              <td class="px-2">4</td>
-              <td class="px-2 text-left">Amonov Ilhom Aliyevich</td>
-              <td class="px-2 text-center">+99890 123-45-67</td>
-              <td class="px-2 text-center">1 000 000 <span>UZS</span></td>
-              <td class="px-2 text-center">0 <span>UZS</span></td>
-              <td class="px-2 text-center">20.23.2022</td>
-              <td class="px-2 text-center text-[#5BABF2]">Tasdiqlangan</td>
-              <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer">
-                  <img src="@/assets/eye.png" alt="" />
-                </button>
-              </td>
-            </tr>
-            <tr class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50">
-              <td class="px-2">4</td>
-              <td class="px-2 text-left">Amonov Ilhom Aliyevich</td>
-              <td class="px-2 text-center">+99890 123-45-67</td>
-              <td class="px-2 text-center">1 000 000 <span>UZS</span></td>
-              <td class="px-2 text-center">0 <span>UZS</span></td>
-              <td class="px-2 text-center">20.23.2022</td>
-              <td class="px-2 text-center text-[#5BABF2]">Bekor qilingan</td>
-              <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer">
+                <button type="button" class="cursor-pointer" @click="clickSponsor()">
                   <img src="@/assets/eye.png" alt="" />
                 </button>
               </td>
@@ -155,19 +92,25 @@
           </tbody>
         </table>
       </div>
-      <div class="w-full bg-black/50 z-50 fixed inset-0
-           flex items-center justify-center"
-           v-if="filterVisible"
-           @click.self="filterVisible = false"
+      <div
+        class="w-full bg-black/50 z-50 fixed inset-0 lex flex items-center justify-center"
+        v-if="filterVisible"
+        @click.self="filterVisible = false"
       >
         <div class="w-[560px] h-[560px] items-start bg-white rounded-lg flex flex-col p-6 gap-4">
           <div class="flex items-center w-full justify-between">
             <h2 class="font-medium text-xl">Filter</h2>
-            <button
-              @click="filterClose()"
-              class="cursor-pointer flex"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-7 h-7 text-[#B2B7C1] transition-colors duration-300 ease-linear hover:text-red-600" viewBox="0 0 640 640"><!--!Font Awesome Free v7.0.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z"/></svg>
+            <button @click="filterClose()" class="cursor-pointer flex">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                class="w-7 h-7 text-[#B2B7C1] transition-colors duration-300 ease-linear hover:text-red-600"
+                viewBox="0 0 640 640"
+              >
+                <path
+                  d="M183.1 137.4C170.6 124.9 150.3 124.9 137.8 137.4C125.3 149.9 125.3 170.2 137.8 182.7L275.2 320L137.9 457.4C125.4 469.9 125.4 490.2 137.9 502.7C150.4 515.2 170.7 515.2 183.2 502.7L320.5 365.3L457.9 502.6C470.4 515.1 490.7 515.1 503.2 502.6C515.7 490.1 515.7 469.8 503.2 457.3L365.8 320L503.1 182.6C515.6 170.1 515.6 149.8 503.1 137.3C490.6 124.8 470.3 124.8 457.8 137.3L320.5 274.7L183.1 137.4z"
+                />
+              </svg>
             </button>
           </div>
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
@@ -175,13 +118,9 @@
             <label class="mb-2 font-semibold uppercase" for="status">Ariza holati</label>
             <select
               id="status"
-              class="border rounded-lg bg-[#E0E7FF33] border border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option
-                v-for="item in menuItems"
-                :key="item.value"
-                :value="item.value"
-              >
+              <option v-for="item in menuItems" :key="item.value" :value="item.value">
                 {{ item.label }}
               </option>
             </select>
@@ -189,51 +128,69 @@
           <div class="w-full flex gap-4 items-start flex-col">
             <h2 class="mb-2 font-semibold uppercase">Homiylik summasi</h2>
             <div class="grid grid-cols-4 w-full gap-3">
-              <button type="button"
-                      class="flex cursor-pointer items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
+              <button
+                type="button"
+                class="flex cursor-pointer items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
               >
                 Barchasi
               </button>
               <button
                 class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-                >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
+              >
+                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
               </button>
               <button
                 class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
+              >
+                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
               </button>
               <button
                 class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
+              >
+                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
               </button>
               <button
                 class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >1 000 000 <span class="text-[#2E5BFF]">UZS</span>
+              >
+                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
               </button>
             </div>
           </div>
           <div class="w-full flex gap-2 items-start flex-col">
             <h2 class="mb-2 font-semibold uppercase">Sana</h2>
-            <input class="w-[250px] h-[42px] rounded bg-[#E0E7FF33] p-[10px] border border-[#E0E7FF]" type="date">
+            <input
+              class="w-[250px] h-[42px] rounded bg-[#E0E7FF33] p-[10px] border border-[#E0E7FF]"
+              type="date"
+            />
           </div>
           <span class="w-full h-1 bg-[#F5F5F7]"></span>
           <div class="flex items-center gap-4 h-[40px] justify-end w-full">
-            <button class="flex text-[#B2B7C1] hover:bg-gray-100 cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2">
-              <img src="@/assets/clear.png" alt=""> Tozalash</button>
-            <button class="flex cursor-pointer text-white rounded px-8 py-2 gap-[10px] hover:bg-blue-400 bg-[#3366FF]"><img src="@/assets/eye2.png" alt="">Natijalarni ko'rish</button>
+            <button
+              class="flex text-[#B2B7C1] hover:bg-gray-100 cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2"
+            >
+              <img src="@/assets/clear.png" alt="" /> Tozalash
+            </button>
+            <button
+              class="flex cursor-pointer text-white rounded px-8 py-2 gap-[10px] hover:bg-blue-400 bg-[#3366FF]"
+            >
+              <img src="@/assets/eye2.png" alt="" />Natijalarni ko'rish
+            </button>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { ApiServices } from '@/service/ApiService.ts'
 const router = useRouter();
 const filterVisible = ref(false);
+const searchText = ref<number | "">("");
+const searchResults = ref([]);
+const sponsorList = ref([])
 const formVisible = () => {
   filterVisible.value = true
 };
@@ -260,9 +217,47 @@ const menuItems = [
   }
 ]
 
+const sponsorSearch = async () => {
+  if (!searchText.value?.trim()) return;
+  try {
+    const response: any = await ApiServices.searchSponsor({query: searchText.value});
+    searchResults.value = response;
+    console.log('izlash', searchResults.value);
+    } catch (error) {
+    console.log(error);
+  }
+}
+const getSponsorsList = async () => {
+  try {
+    const response = await ApiServices.createSponsorList();
+    sponsorList.value = response?.results ? response?.results : [];
+    console.log('Sponsor',sponsorList.value);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+const formatDate = (isoString: string): string => {
+  const date = new Date(isoString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  return `${day}.${month}.${year}`;
+};
+
+
 const clickSponsor = () => {
   router.push('/sponsors')
 }
+
+onMounted(() => {
+  getSponsorsList()
+  sponsorSearch()
+})
+watch([searchText],() => {
+  sponsorSearch()
+})
 </script>
 
 <style scoped>

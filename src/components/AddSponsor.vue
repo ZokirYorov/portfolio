@@ -58,7 +58,7 @@
     >
       <form
         @submit.prevent="formSave"
-        class="w-[560px] min-h-[560px] items-start bg-white rounded-lg flex flex-col p-6 gap-7">
+        class="w-[560px] max-h-[650px] overflow-auto items-start bg-white rounded-lg flex flex-col p-6 gap-5">
         <div class="flex items-center w-full justify-between">
           <h2 class="font-medium text-xl">Tahrirlash</h2>
           <button
@@ -70,8 +70,8 @@
         </div>
         <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
         <div class="flex items-center h-[40px] w-full">
-          <div class="flex items-center w-full border rounded-md border-[#E0E7FF] justify-between h-full">
-            <button class="uppercase items-center flex items-center justify-center h-full cursor-pointer rounded-bl-md rounded-tl-md hover:bg-blue-400 hover:text-white w-full border-[#E0E7FF] font-500"
+          <div class="flex items-center w-full border rounded-md border-[#E0E7FF] justify-between h-[40px]">
+            <button class="uppercase flex items-center justify-center h-full cursor-pointer rounded-bl-md rounded-tl-md hover:bg-blue-400 hover:text-white w-full border-[#E0E7FF] font-500"
                     @click="setType('phsical')"
                     :class="activeType === 'phsical' ? 'bg-[#3366FF] text-white' : 'text-[#3366FF99]'"
             >Jismoniy shaxs</button>
@@ -101,7 +101,7 @@
           <label class="mb-2 font-medium text-sm uppercase" for="status">Holati</label>
           <select
             id="status"
-            class="border rounded-lg bg-[#E0E7FF33] border border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="rounded-lg bg-[#E0E7FF33] border border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option
               v-for="item in menuItems"
@@ -116,7 +116,7 @@
           <label class="mb-2 font-medium text-sm uppercase" for="status">Homiylik summasi</label>
           <select
             id="status"
-            class="border rounded-lg bg-[#E0E7FF33] border border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option
               v-for="item in sponsorMoney"
@@ -131,7 +131,7 @@
           <label class="mb-2 font-medium text-sm uppercase" for="status">To'lov turi</label>
           <select
             id="status"
-            class="border rounded-lg bg-[#E0E7FF33] border border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option
               v-for="item in statusPayment"
@@ -143,13 +143,12 @@
           </select>
         </div>
         <div v-if="activeType === 'legal'" class="flex flex-col w-full h-[64px] gap-2">
-          <span class="uppercase text-sm h-[14px] text-sm flex font-medium">Tashkilot nomi</span>
+          <span class="uppercase h-[14px] text-sm flex font-medium">Tashkilot nomi</span>
           <input type="text"
                  placeholder="Orient Group"
                  class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
           />
         </div>
-
         <span class="w-full h-1 bg-[#F5F5F7]"></span>
         <div class="flex items-center gap-4 h-[40px] justify-end w-full">
           <button
