@@ -103,7 +103,7 @@
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="w-full flex flex-col h-[64px] gap-2">
             <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharif)</span>
-            <input type="number"
+            <input type="text"
                    placeholder="Ism familiya"
                    class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
             />
@@ -141,6 +141,7 @@
             </svg>
           </button>
         </div>
+        <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
         <div class="w-full text-[#2E384D] h-[64px] flex flex-col gap-2">
           <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharifingiz)</span>
           <input type="text"
@@ -169,6 +170,14 @@
                  placeholder="30 000 000"
                  class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
           />
+        </div>
+        <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
+        <div class="flex items-center gap-4 h-[40px] justify-end w-full">
+          <button
+            type="submit"
+            class="flex cursor-pointer hover:bg-blue-400 text-white rounded px-8 py-2 gap-[10px] bg-[#3366FF]"
+          >
+            <img src="@/assets/save.png" alt="">Saqlash</button>
         </div>
       </div>
     </div>

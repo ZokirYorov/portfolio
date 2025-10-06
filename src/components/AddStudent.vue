@@ -3,7 +3,7 @@
     <div class="flex bg-gray-50 h-[88px] flex-col w-full">
       <div class="flex items-center w-7xl gap-3 m-auto">
         <button
-          class="bg-gray-200 flex cursor-pointer w-10 items-center justify-center h-8 rounded-sm"
+          class="bg-gray-200 hover:bg-gray-300 flex cursor-pointer w-11 items-center justify-center h-8 rounded-sm"
           @click="$router.back()"
         >
           <img src="@/assets/arrowLeft.png" alt="" />
@@ -60,7 +60,8 @@
           </div>
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="w-full justify-end flex">
-            <button class="w-[155px] h-[42px] bg-[#3366FF] rounded text-white hover:bg-blue-700 cursor-pointer right-0">+ Qo'shish</button>
+            <button class="w-[155px] h-[42px] gap-2.5 flex items-center justify-center bg-[#3366FF] rounded text-white hover:bg-blue-700 cursor-pointer right-0">
+              <img class="w-6 h-6" src="@/assets/plus.png" alt=""> Qo'shish</button>
           </div>
         </div>
       </div>

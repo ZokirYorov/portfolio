@@ -13,6 +13,16 @@ export const ApiServices = {
     )
     return response.data
   },
+
+  async getSponsorStatus(): Promise<any> {
+    const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/sponsor-status/');
+    return response.data
+  },
+  async updateSponsor(): Promise<any> {
+    const response = await axiosInstance.put('https://metsenatclub.xn--h28h.uz/api/v1/sponsor-update/{id}/');
+    return response.data
+  },
+
   async searchSponsor(payload: { query: string }): Promise<any> {
     const response = await axiosInstance.post(
       'https://metsenatclub.xn--h28h.uz/api/v1/search/',

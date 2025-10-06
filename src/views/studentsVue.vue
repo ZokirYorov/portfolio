@@ -39,9 +39,11 @@
       </div>
     </div>
     <div class="w-7xl flex m-auto justify-end my-7 h-[42px]">
-      <button class="right-10 flex bg-[#3366FF] hover:bg-blue-700 cursor-pointer w-[190px] items-center justify-center text-white rounded"
+      <button class="right-10 gap-2.5 flex bg-[#3366FF] hover:bg-blue-700 cursor-pointer w-[190px] items-center justify-center text-white rounded"
               @click="addStudentItem"
-      >+ Talaba qo'shish</button>
+      >
+        <img class="w-6 h-6" src="@/assets/plus.png" alt="">
+        Talaba qo'shish</button>
     </div>
     <div class="flex flex-col w-7xl m-auto items-center justify-center h-full">
       <div class="flex w-full h-full">

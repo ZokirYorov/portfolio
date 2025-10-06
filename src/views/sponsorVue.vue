@@ -117,10 +117,13 @@
           <div class="flex flex-col w-full">
             <label class="mb-2 font-semibold uppercase" for="status">Ariza holati</label>
             <select
+              v-model="selectedStatus"
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option v-for="item in menuItems" :key="item.value" :value="item.value">
+              <option v-for="item in menuItems"
+                      :key="item.value"
+                      :value="item.value">
                 {{ item.label }}
               </option>
             </select>
@@ -190,7 +193,8 @@ const router = useRouter();
 const filterVisible = ref(false);
 const searchText = ref<number | "">("");
 const searchResults = ref([]);
-const sponsorList = ref([])
+const sponsorList = ref([]);
+const selectedStatus = ref('');
 const formVisible = () => {
   filterVisible.value = true
 };
@@ -199,24 +203,18 @@ const filterClose = () => {
 }
 
 
-const menuItems = [
-  {
-    id: 1,
-    label: "Barchasi",
-    value: 'barchasi',
-  },
-  {
-    id: 2,
-    label: "Yangi",
-    value: 'yangi',
-  },
-  {
-    id: 3,
-    label: "Moderatsiya",
-    value: 'moderatsiy',
-  }
-]
+const menuItems = ref([])
 
+const loadStatus = async () => {
+  try {
+    const response = await ApiServices.getSponsorStatus();
+    menuItems.value = response.data;
+    console.log("Statuslar", response.data);
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
 const sponsorSearch = async () => {
   if (!searchText.value?.trim()) return;
   try {
@@ -254,6 +252,7 @@ const clickSponsor = () => {
 onMounted(() => {
   getSponsorsList()
   sponsorSearch()
+  loadStatus()
 })
 watch([searchText],() => {
   sponsorSearch()
