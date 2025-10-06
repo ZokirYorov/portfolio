@@ -123,8 +123,8 @@
       </div>
     </div>
     <div
-      v-if="visibleEeditForm"
-      @click.self="visibleEeditForm = false"
+      v-if="visibleEditForm"
+      @click.self="visibleEditForm = false"
       class="w-full flex items-center justify-center bg-black/50 z-50 fixed inset-0">
       <div class="flex flex-col w-[586px] h-[578px] gap-7 bg-white rounded-2xl p-6">
         <div class="flex w-full items-center justify-between">
