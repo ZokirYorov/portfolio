@@ -103,11 +103,10 @@
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="w-full flex flex-col h-[64px] gap-2">
             <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharif)</span>
-            <select
-              class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              name="" id="">
-              <option value=""></option>
-            </select>
+            <input type="number"
+                   placeholder="Ism familiya"
+                   class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
+            />
           </div>
           <div class="w-full h-[64px] flex flex-col gap-2">
             <span class="flex text-sm font-medium uppercase">Ajratilgan summa</span>
