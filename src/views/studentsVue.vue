@@ -116,8 +116,8 @@
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option v-for="item in menuItems" :key="item.value" :value="item.value">
-                {{ item.label }}
+              <option>
+                {{  }}
               </option>
             </select>
           </div>
@@ -127,8 +127,8 @@
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option v-for="item in menuItems" :key="item.value" :value="item.value">
-                {{ item.label }}
+              <option>
+                {{  }}
               </option>
             </select>
           </div>
