@@ -115,22 +115,32 @@
           <div class="flex flex-col w-full">
             <label class="mb-2 font-semibold uppercase" for="status">Talabalik turi</label>
             <select
+              v-model="selectedType"
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option>
-                {{  }}
+              <option value="" disabled>Barchasi</option>
+              <option
+                v-for="(item, index) in getStudentsAll"
+                :key="index"
+              >
+                {{item.type}}
               </option>
             </select>
           </div>
           <div class="flex flex-col w-full">
             <label class="mb-2 font-semibold uppercase" for="status">Otm</label>
             <select
+              v-model="getInstitute"
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option>
-                {{  }}
+              <option value="" disabled>Barchasi</option>
+              <option
+                v-for="(item, index) in institutesAll"
+                :key="index"
+              >
+                {{item.name}}
               </option>
             </select>
           </div>
@@ -155,13 +165,21 @@
 
 <script setup lang="ts">
 import ApiService from '@/service/ApiService.ts'
-import { ref, watch, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const getStudentsAll = ref([]);
 const filterVisible = ref(false);
+const selectedType = ref('');
+const getInstitute = ref('')
 
+const institutesAll = ref([
+  {
+    id: 0,
+    name: ''
+  }
+])
 const visibleForm = () => {
   filterVisible.value = true
 }
@@ -182,8 +200,18 @@ const allStudents = async () => {
   console.log(response)
 }
 
+const getInstituteAll = async () => {
+  try {
+    institutesAll.value = await ApiService.getInstituteList()
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
 onMounted(() => {
   allStudents()
+  getInstituteAll()
 })
 </script>
 

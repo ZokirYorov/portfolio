@@ -142,11 +142,13 @@
         <div class="flex flex-col w-full">
           <label class="mb-2 font-medium text-sm uppercase" for="status">To'lov turi</label>
           <select
+            v-model="selectedPayment"
             id="status"
             class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option v-for="item in statusPayment" :key="item.value" :value="item.value">
-              {{ item.label }}
+            <option value="" disabled>To'lov turini tanlang</option>
+            <option v-for="(item, index) in statusPayment" :key="index">
+              {{ item.title }}
             </option>
           </select>
         </div>
@@ -177,8 +179,10 @@ import { onMounted, ref } from 'vue'
 import ApiServices from '@/service/ApiService.ts'
 
 const emit = defineEmits(['formSave'])
-const editingForm = ref(false)
-const sponsorUpdate = ref([])
+const editingForm = ref(false);
+const selectedPayment = ref('');
+
+const sponsorUpdate = ref([]);
 
 const activeType = ref<'phsical' | 'legal'>('phsical')
 
@@ -252,25 +256,21 @@ const sponsorMoney = [
   },
 ]
 
-const statusPayment = [
-  {
-    id: 1,
-    label: 'Pul utkazmalari',
-    value: 'Pul utkazmalari',
-  },
-  {
-    id: 2,
-    label: 'Naqd tulov',
-    value: 'Naqd tulov',
-  },
-  {
-    id: 3,
-    label: 'Karta orqali',
-    value: 'Karta orqali',
-  },
-]
+const statusPayment = ref([])
+
+const getStatusPayment = async () => {
+  try {
+    const response = await ApiServices.getPaymentsAll();
+    statusPayment.value = response;
+    console.log(response);
+  }
+  catch (error) {
+    console.error(error);
+  }
+}
 
 onMounted(() => {
   sponsorEditForm()
+  getStatusPayment()
 })
 </script>

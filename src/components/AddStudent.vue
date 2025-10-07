@@ -19,49 +19,62 @@
           <div class="flex items-center gap-7 justify-between">
             <div class="w-full flex flex-col h-[64px] gap-2">
               <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharif)</span>
-              <input type="text"
-                     placeholder="Familiya ism sharif"
-                     class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[40px] w-full"
+              <input
+                type="text"
+                placeholder="Familiya ism sharif"
+                class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[40px] w-full"
               />
             </div>
             <div class="w-full h-[64px] flex flex-col gap-2">
               <span class="flex text-sm font-medium uppercase">Telefon raqam</span>
-              <input type="number"
-                     placeholder="+99890 00 000-00-00"
-                     class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
+              <input
+                type="number"
+                placeholder="+99890 00 000-00-00"
+                class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
               />
             </div>
-
           </div>
-          <div class="w-full flex flex-col gap-2 h-[64px]">
+          <div class="w-full flex flex-col gap-2 h-[70px]">
             <span class="font-medium text-sm uppercase text-sm">Otm</span>
             <select
-              class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
-              >
-              <option value=""></option>
+              v-model="selectedInstitute"
+              class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[45px] w-full"
+            >
+              <option value="" disabled selected class="uppercase">Institutni tanlang</option>
+              <option v-for="(item, index) in menuItems" :key="index">
+                {{ item.name }}
+              </option>
             </select>
           </div>
-          <div class="w-full flex h-[64px] gap-7">
+          <div class="w-full flex h-[70px] gap-7">
             <div class="w-full h-full flex flex-col gap-2">
               <span class="uppercase font-medium text-sm">Talabalik turi</span>
               <select
-                class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
+                v-model="selectedStudentType"
+                class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
               >
-                <option value=""></option>
+                <option value="">Talaba turini tanlang</option>
+                <option value="" v-for="(item, index) in studentType" :key="index">
+                  {{ item.type }}
+                </option>
               </select>
             </div>
             <div class="w-full h-full flex flex-col gap-2">
               <span class="uppercase font-medium text-sm">Kontrakt summa</span>
-              <input type="number"
-                     placeholder="Summani kiriting"
-                     class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
+              <input
+                type="number"
+                placeholder="Summani kiriting"
+                class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
               />
             </div>
           </div>
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="w-full justify-end flex">
-            <button class="w-[155px] h-[42px] gap-2.5 flex items-center justify-center bg-[#3366FF] rounded text-white hover:bg-blue-700 cursor-pointer right-0">
-              <img class="w-6 h-6" src="@/assets/plus.png" alt=""> Qo'shish</button>
+            <button
+              class="w-[155px] h-[42px] gap-2.5 flex items-center justify-center bg-[#3366FF] rounded text-white hover:bg-blue-700 cursor-pointer right-0"
+            >
+              <img class="w-6 h-6" src="@/assets/plus.png" alt="" /> Qo'shish
+            </button>
           </div>
         </div>
       </div>
@@ -69,53 +82,44 @@
   </div>
 </template>
 
-
 <script setup lang="ts">
+import ApiService from '@/service/ApiService.ts'
+import { onMounted, ref } from 'vue'
 
-import { ref } from 'vue'
-const emit = defineEmits(["formSave"])
-const editingForm = ref(false);
+const studentType = ref<string>()
+const emit = defineEmits(['formSave'])
+const selectedInstitute = ref('')
+const selectedStudentType = ref('')
 
-const activeType = ref<'phsical' | 'legal'>('phsical');
-
-const setType = (type: 'phsical' | 'legal') => {
-  activeType.value = type
-}
-const filterClose = () => {
-  editingForm.value = false
-}
-
-const clickForm = () => {
-  editingForm.value = true
-}
 
 const formSave = () => {
-  emit("formSave", )
-
+  emit('formSave')
 }
-const menuItems = [
-  {
-    id: 1,
-    label: "Tasdiqlangan",
-    value: 'tasdiqlangan',
-  },
-  {
-    id: 2,
-    label: "Barchasi",
-    value: 'barchasi',
-  },
-  {
-    id: 3,
-    label: "Yangi",
-    value: 'yangi',
-  },
-  {
-    id: 4,
-    label: "Moderatsiya",
-    value: 'moderatsiy',
-  },
-]
 
+const menuItems = ref([
+  {
+    id: 0,
+    name: '',
+  },
+])
+
+const getStudentType = async () => {
+  try {
+    const response = await ApiService.getAllStudents()
+    studentType.value = response.results
+  }
+  catch (error) {
+    console.error('Error getStudentType', error)
+  }
+}
+
+const instituteList = async () => {
+  try {
+    menuItems.value = await ApiService.getInstituteList()
+  } catch (error) {
+    console.error(error)
+  }
+}
 const sponsorMoney = [
   {
     id: 1,
@@ -159,7 +163,11 @@ const statusPayment = [
     id: 3,
     label: 'Karta orqali',
     value: 'Karta orqali',
-  }
+  },
 ]
 
+onMounted(() => {
+  instituteList()
+  getStudentType()
+})
 </script>

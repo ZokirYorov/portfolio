@@ -14,10 +14,20 @@ export const ApiServices = {
     return response.data
   },
 
-  async getSponsorStatus(): Promise<any> {
-    const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/sponsor-status/');
+  async getInstituteList(): Promise<any> {
+    const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/institute-list/');
     return response.data
   },
+
+  async getPaymentsAll(): Promise<any> {
+    const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/payment-type-list/')
+    return response.data
+  },
+
+  // async getSponsorStatus(): Promise<any> {
+  //   const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/sponsor-status/');
+  //   return response.data
+  // },
   async updateSponsor(): Promise<any> {
     const response = await axiosInstance.put('https://metsenatclub.xn--h28h.uz/api/v1/sponsor-update/{id}/');
     return response.data
@@ -33,7 +43,12 @@ export const ApiServices = {
   async getAllStudents(): Promise<any> {
     const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/student-list/')
     return response.data
+  },
+  async getAllMoneys(): Promise<any> {
+    const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/tariff-list/');
+    return response.data
   }
+
 }
 
 export default ApiServices;

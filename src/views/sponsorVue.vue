@@ -29,7 +29,6 @@
                 type="text"
                 v-model="searchText"
                 placeholder="Izlash"
-                @keyup.enter="sponsorSearch"
               />
             </div>
             <button
@@ -97,7 +96,7 @@
         v-if="filterVisible"
         @click.self="filterVisible = false"
       >
-        <div class="w-[560px] h-[560px] items-start bg-white rounded-lg flex flex-col p-6 gap-4">
+        <div class="w-[560px] h-[600px] items-start bg-white rounded-lg flex flex-col p-4 gap-4">
           <div class="flex items-center w-full justify-between">
             <h2 class="font-medium text-xl">Filter</h2>
             <button @click="filterClose()" class="cursor-pointer flex">
@@ -121,42 +120,53 @@
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option v-for="item in menuItems"
-                      :key="item.value"
-                      :value="item.value">
-                {{ item.label }}
+              <option value="" disabled selected>Holatni tanlang</option>
+              <option
+                v-for="(item, index) in sponsorList"
+                :key="index"
+              >
+                {{item.get_status_display}}
               </option>
             </select>
           </div>
           <div class="w-full flex gap-4 items-start flex-col">
             <h2 class="mb-2 font-semibold uppercase">Homiylik summasi</h2>
-            <div class="grid grid-cols-4 w-full gap-3">
-              <button
-                type="button"
-                class="flex cursor-pointer items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
+
+            <div class="flex h-full gap-4 w-full">
+              <div class="flex grid grid-cols-4 justify-between items-center w-full gap-3"
               >
-                Barchasi
-              </button>
-              <button
-                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >
-                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </button>
-              <button
-                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >
-                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </button>
-              <button
-                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >
-                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </button>
-              <button
-                class="flex cursor-pointer bg-[#FFFFFF] border border-[#E0E7FF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
-              >
-                1 000 000 <span class="text-[#2E5BFF]">UZS</span>
-              </button>
+                <button
+                  :class="selectedSum === 'all'
+                ? 'border-2 border-[#2E5BFF]'
+                : ''"
+                  type="button"
+                  class="flex relative cursor-pointer items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
+                @click="selectAll"
+                >
+                  <img
+                    v-if="selectedSum === 'all'"
+                    src="@/assets/check.png" alt=""
+                    class="absolute top-[-6px] right-[-6px] w-4 h-4"
+
+                  >
+                  Barchasi
+                </button>
+                <button
+                  @click="selectItem(item.id)"
+                  v-for="(item, index) in allMoneys"
+                  :key="index"
+                  :class="selectedSum === item.id ? 'border-2 border-[#2E5BFF]': 'border border-[#E0E7FF]' "
+                  class="flex relative cursor-pointer bg-[#FFFFFF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
+                >
+                  <img
+                    v-if="selectedSum === item.id"
+                    src="@/assets/check.png" alt=""
+                    class="absolute top-[-6px] right-[-6px] w-4 h-4"
+
+                  >
+                  {{item.summa}}<span class="text-[#2E5BFF]">UZS</span>
+                </button>
+              </div>
             </div>
           </div>
           <div class="w-full flex gap-2 items-start flex-col">
@@ -189,12 +199,16 @@
 import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiServices } from '@/service/ApiService.ts'
+
+
 const router = useRouter();
 const filterVisible = ref(false);
 const searchText = ref<number | "">("");
-const searchResults = ref([]);
+const selectedStatus = ref('')
+
 const sponsorList = ref([]);
-const selectedStatus = ref('');
+const allMoneys = ref<any[]>([])
+const selectedSum = ref<string | number | null>(null)
 const formVisible = () => {
   filterVisible.value = true
 };
@@ -203,37 +217,31 @@ const filterClose = () => {
 }
 
 
-const menuItems = ref([])
-
-const loadStatus = async () => {
-  try {
-    const response = await ApiServices.getSponsorStatus();
-    menuItems.value = response.data;
-    console.log("Statuslar", response.data);
-  }
-  catch (error) {
-    console.error(error);
-  }
-}
-const sponsorSearch = async () => {
-  if (!searchText.value?.trim()) return;
-  try {
-    const response: any = await ApiServices.searchSponsor({query: searchText.value});
-    searchResults.value = response;
-    console.log('izlash', searchResults.value);
-    } catch (error) {
-    console.log(error);
-  }
-}
 const getSponsorsList = async () => {
   try {
     const response = await ApiServices.createSponsorList();
     sponsorList.value = response?.results ? response?.results : [];
-    console.log('Sponsor',sponsorList.value);
   } catch (error) {
     console.log(error);
   }
 }
+
+const loadAllMoney = async () => {
+  try {
+    allMoneys.value = await ApiServices.getAllMoneys();
+  }
+  catch (error) {
+    console.log(error);
+  }
+}
+
+const selectAll = () => {
+  selectedSum.value = "all";
+}
+const selectItem = (id: number) => {
+  selectedSum.value = id;
+}
+
 
 
 const formatDate = (isoString: string): string => {
@@ -251,11 +259,9 @@ const clickSponsor = () => {
 
 onMounted(() => {
   getSponsorsList()
-  sponsorSearch()
-  loadStatus()
+  loadAllMoney()
 })
 watch([searchText],() => {
-  sponsorSearch()
 })
 </script>
 
