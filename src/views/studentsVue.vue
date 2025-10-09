@@ -86,9 +86,9 @@
               class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
             >
               <td class="px-2">{{ index + 1 }}</td>
-              <td class="px-2 text-left">{{ item[`full_name`]}}</td>
+              <td class="px-2 text-left">{{ item['full_name']}}</td>
               <td class="px-2 text-center">{{ item.type }}</td>
-              <td class="px-2 text-center">{{ item[`institute`].name }}</td>
+              <td class="px-2 text-center">{{ item['institute'].name }}</td>
               <td class="px-2 items-center flex h-full justify-center gap-2">
                 {{ item[`given`] }}<span>UZS</span>
               </td>
@@ -245,7 +245,6 @@ const getInstituteAll = async () => {
 }
 
 onMounted(() => {
-  submitForm()
   allStudents()
   getInstituteAll()
 })
