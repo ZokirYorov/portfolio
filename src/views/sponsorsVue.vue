@@ -71,13 +71,13 @@
               class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
             >
               <td class="px-2">{{ index + 1 }}</td>
-              <td class="px-2 text-left">{{ sponsor[`full_name`] }}</td>
+              <td class="px-2 text-left">{{ sponsor['full_name'] }}</td>
               <td class="px-2 text-center">{{ sponsor.phone }}</td>
               <td class="px-2 flex items-center justify-center gap-2 h-full">{{ sponsor['sum'] }}<span>UZS</span></td>
-              <td class="px-2 text-center gap-2">{{ sponsor.spent }}<span>UZS</span></td>
-              <td class="px-2 text-center">{{ formatDate(sponsor.created_at) }}</td>
+              <td class="px-2 text-center gap-2">{{ sponsor['spent'] }}<span>UZS</span></td>
+              <td class="px-2 text-center">{{ formatDate(sponsor['created_at']) }}</td>
               <td :class="['px-2 text-center', statusChange[sponsor['get_status_display']]]">
-                {{ sponsor.get_status_display }}
+                {{ sponsor['get_status_display'] }}
               </td>
               <td class="px-2 text-center">
                 <button type="button" class="cursor-pointer" @click="clickSponsor()">
@@ -119,7 +119,7 @@
             >
               <option value="" disabled selected>Holatni tanlang</option>
               <option v-for="(item, index) in sponsorList" :key="index">
-                {{ item.get_status_display }}
+                {{ item['get_status_display'] }}
               </option>
             </select>
           </div>
@@ -159,7 +159,7 @@
                     alt=""
                     class="absolute top-[-6px] right-[-6px] w-4 h-4"
                   />
-                  {{ item.summa }}<span class="text-[#2E5BFF]">UZS</span>
+                  {{ item['summa'] }}<span class="text-[#2E5BFF]">UZS</span>
                 </button>
               </div>
             </div>
