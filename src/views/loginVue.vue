@@ -21,7 +21,7 @@
           placeholder="Parol kiriting"
           class="bg-[#E0E7FF33] border-[#E0E7FF]-1 px-2 text-[#2E384D] rounded h-10" type="password">
       </div>
-      <div class="flex items-center h-14 justify-between bg-[#FAFAFA] border-[#FAFAFA]-1 p-3 w-full gap-2">
+      <div class="flex items-center h-19 justify-between bg-[#FAFAFA] border-[#FAFAFA]-1 p-3 w-full gap-2">
         <div class="flex w-full items-center gap-2">
           <input
             v-model="form.check"
