@@ -13,23 +13,18 @@
               >
               <span
                 class="w-[180px] cursor-pointer bg-[#3366FF] text-white hover:bg-blue-700 hover:text-white flex justify-center h-full items-center"
-                ><router-link to="/sponsor">Homiylar</router-link></span
+                ><router-link to="/sponsors">Homiylar</router-link></span
               >
               <span
                 class="w-[180px] cursor-pointer hover:bg-blue-700 hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] h-full items-center"
-                ><router-link to="/student">Talabalar</router-link></span
+                ><router-link to="/students">Talabalar</router-link></span
               >
             </div>
           </div>
           <div class="flex h-full w-[420px] items-center justify-between">
             <div class="flex rounded w-[280px] p-2 gap-2 bg-[#E8E8E8] items-center">
               <img src="@/assets/search.png" alt="" />
-              <input
-                class="text-[#B1B1B8] w-full p-1"
-                type="text"
-                v-model="searchText"
-                placeholder="Izlash"
-              />
+              <input class="w-full p-1" type="text" v-model="searchText" placeholder="Izlash" />
             </div>
             <button
               @click="formVisible()"
@@ -45,7 +40,7 @@
     </div>
     <div class="flex flex-col w-7xl m-auto items-center justify-center h-full">
       <div class="flex mt-12 w-full h-full">
-        <table class="w-full h-full border-separate border-spacing-y-[12px]">
+        <table class="w-full h-full border-separate border-spacing-y-[12px] pb-5">
           <colgroup>
             <col style="width: 1%" />
             <col style="width: 20%" />
@@ -78,10 +73,12 @@
               <td class="px-2">{{ index + 1 }}</td>
               <td class="px-2 text-left">{{ sponsor.full_name }}</td>
               <td class="px-2 text-center">{{ sponsor.phone }}</td>
-              <td class="px-2 flex items-center justify-center gap-2 h-full">{{ sponsor.sum }}<span>UZS</span></td>
+              <td class="px-2 flex items-center justify-center gap-2 h-full">
+                {{ sponsor.sum }}<span>UZS</span>
+              </td>
               <td class="px-2 text-center">{{ sponsor.spent }}<span>UZS</span></td>
               <td class="px-2 text-center">{{ formatDate(sponsor.created_at) }}</td>
-              <td class="px-2 text-center text-[#5BABF2]">{{ sponsor.get_status_display }}</td>
+              <td :class="['px-2 text-center', statusChange[sponsor.get_status_display]]">{{ sponsor.get_status_display }}</td>
               <td class="px-2 text-center">
                 <button type="button" class="cursor-pointer" @click="clickSponsor()">
                   <img src="@/assets/eye.png" alt="" />
@@ -121,11 +118,8 @@
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled selected>Holatni tanlang</option>
-              <option
-                v-for="(item, index) in sponsorList"
-                :key="index"
-              >
-                {{item.get_status_display}}
+              <option v-for="(item, index) in sponsorList" :key="index">
+                {{ item.get_status_display }}
               </option>
             </select>
           </div>
@@ -133,38 +127,39 @@
             <h2 class="mb-2 font-semibold uppercase">Homiylik summasi</h2>
 
             <div class="flex h-full gap-4 w-full">
-              <div class="flex grid grid-cols-4 justify-between items-center w-full gap-3"
-              >
+              <div class="flex grid grid-cols-4 justify-between items-center w-full gap-3">
                 <button
-                  :class="selectedSum === 'all'
-                ? 'border-2 border-[#2E5BFF]'
-                : ''"
+                  :class="selectedSum === 'all' ? 'border-2 border-[#2E5BFF]' : ''"
                   type="button"
                   class="flex relative cursor-pointer items-center justify-center rounded-sm w-[120px] h-13 bg-[#E0E7FF]"
-                @click="selectAll"
+                  @click="selectAll"
                 >
                   <img
                     v-if="selectedSum === 'all'"
-                    src="@/assets/check.png" alt=""
+                    src="@/assets/check.png"
+                    alt=""
                     class="absolute top-[-6px] right-[-6px] w-4 h-4"
-
-                  >
+                  />
                   Barchasi
                 </button>
                 <button
                   @click="selectItem(item.id)"
                   v-for="(item, index) in allMoneys"
                   :key="index"
-                  :class="selectedSum === item.id ? 'border-2 border-[#2E5BFF]': 'border border-[#E0E7FF]' "
+                  :class="
+                    selectedSum === item.id
+                      ? 'border-2 border-[#2E5BFF]'
+                      : 'border border-[#E0E7FF]'
+                  "
                   class="flex relative cursor-pointer bg-[#FFFFFF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
                 >
                   <img
                     v-if="selectedSum === item.id"
-                    src="@/assets/check.png" alt=""
+                    src="@/assets/check.png"
+                    alt=""
                     class="absolute top-[-6px] right-[-6px] w-4 h-4"
-
-                  >
-                  {{item.summa}}<span class="text-[#2E5BFF]">UZS</span>
+                  />
+                  {{ item.summa }}<span class="text-[#2E5BFF]">UZS</span>
                 </button>
               </div>
             </div>
@@ -172,6 +167,7 @@
           <div class="w-full flex gap-2 items-start flex-col">
             <h2 class="mb-2 font-semibold uppercase">Sana</h2>
             <input
+              v-model="dataInput"
               class="w-[250px] h-[42px] rounded bg-[#E0E7FF33] p-[10px] border border-[#E0E7FF]"
               type="date"
             />
@@ -179,6 +175,7 @@
           <span class="w-full h-1 bg-[#F5F5F7]"></span>
           <div class="flex items-center gap-4 h-[40px] justify-end w-full">
             <button
+              @click="clearAll"
               class="flex text-[#B2B7C1] hover:bg-gray-100 cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2"
             >
               <img src="@/assets/clear.png" alt="" /> Tozalash
@@ -196,73 +193,81 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiServices } from '@/service/ApiService.ts'
 
-
-const router = useRouter();
-const filterVisible = ref(false);
-const searchText = ref<number | "">("");
+const router = useRouter()
+const filterVisible = ref(false)
+const searchText = ref<number | ''>('')
 const selectedStatus = ref('')
+const dataInput = ref<number | null>()
 
-const sponsorList = ref([]);
+const sponsorList = ref([])
 const allMoneys = ref<any[]>([])
 const selectedSum = ref<string | number | null>(null)
+
+const statusChange: Record<string, string> = {
+  Yangi: 'text-[#5BABF2]',
+  Moderatsiyada: 'text-[#FFA445]',
+  Tasdiqlangan: 'text-[#00CF83]',
+  Bekor_qilingan: 'text-[#979797]',
+}
+
 const formVisible = () => {
   filterVisible.value = true
-};
+}
 const filterClose = () => {
   filterVisible.value = false
 }
 
-
 const getSponsorsList = async () => {
   try {
-    const response = await ApiServices.createSponsorList();
-    sponsorList.value = response?.results ? response?.results : [];
+    const response = await ApiServices.getSponsorList()
+    sponsorList.value = response?.results ? response?.results : []
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
 
 const loadAllMoney = async () => {
   try {
-    allMoneys.value = await ApiServices.getAllMoneys();
-  }
-  catch (error) {
-    console.log(error);
+    allMoneys.value = await ApiServices.getAllMoneys()
+  } catch (error) {
+    console.log(error)
   }
 }
 
 const selectAll = () => {
-  selectedSum.value = "all";
+  selectedSum.value = 'all'
 }
 const selectItem = (id: number) => {
-  selectedSum.value = id;
+  selectedSum.value = id
 }
 
-
+const clearAll = (item) => {
+  selectedStatus.value = ''
+  selectedSum.value = item
+  dataInput.value = null
+}
 
 const formatDate = (isoString: string): string => {
-  const date = new Date(isoString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-};
-
+  const date = new Date(isoString)
+  const day = String(date.getDate()).padStart(2, '0')
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const year = date.getFullYear()
+  return `${day}.${month}.${year}`
+}
 
 const clickSponsor = () => {
-  router.push('/sponsors')
+  router.push('/sponsor')
 }
 
 onMounted(() => {
   getSponsorsList()
   loadAllMoney()
 })
-watch([searchText],() => {
-})
+watch([searchText], () => {})
 </script>
 
 <style scoped>

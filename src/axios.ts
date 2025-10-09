@@ -1,13 +1,12 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL='https://metsenatclub.xn--h28h.uz/api/v1',
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// Har bir so‘rovdan oldin tokenni qo‘shadi
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("access_token");
   if (token) {

@@ -14,11 +14,11 @@
                 >
                 <span
                   class="w-[180px] h-[40px] cursor-pointer hover:bg-blue-700 hover:text-white flex justify-center items-center"
-                  ><router-link to="/sponsor">Homiylar</router-link></span
+                  ><router-link to="/sponsors">Homiylar</router-link></span
                 >
                 <span
                   class="w-[180px] h-[40px] cursor-pointer hover:bg-blue-700 hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] items-center"
-                  ><router-link to="/student">Talabalar</router-link></span
+                  ><router-link to="/students">Talabalar</router-link></span
                 >
               </div>
             </div>

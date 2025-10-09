@@ -4,7 +4,7 @@
       <div class="flex items-center w-7xl gap-3 m-auto">
         <button
           class="bg-gray-200 hover:bg-gray-300 flex cursor-pointer w-11 items-center justify-center h-8 rounded-sm"
-          @click="$router.back()"
+          @click="closeAddForm"
         >
           <img src="@/assets/arrowLeft.png" alt="" />
         </button>
@@ -15,11 +15,14 @@
       <div
         class="flex flex-col h-[400px] items-center justify-between p-8 w-full bg-white rounded-xl shadow"
       >
-        <div class="flex flex-col gap-6 w-full">
+        <form
+          @submit.prevent="saveForm"
+          class="flex flex-col gap-6 w-full">
           <div class="flex items-center gap-7 justify-between">
             <div class="w-full flex flex-col h-[64px] gap-2">
               <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharif)</span>
               <input
+                v-model="form.full_name"
                 type="text"
                 placeholder="Familiya ism sharif"
                 class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[40px] w-full"
@@ -28,6 +31,7 @@
             <div class="w-full h-[64px] flex flex-col gap-2">
               <span class="flex text-sm font-medium uppercase">Telefon raqam</span>
               <input
+                v-model="form.phone"
                 type="number"
                 placeholder="+99890 00 000-00-00"
                 class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -37,11 +41,11 @@
           <div class="w-full flex flex-col gap-2 h-[70px]">
             <span class="font-medium text-sm uppercase text-sm">Otm</span>
             <select
-              v-model="selectedInstitute"
+              v-model="form.institute"
               class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[45px] w-full"
             >
               <option value="" disabled selected class="uppercase">Institutni tanlang</option>
-              <option v-for="(item, index) in menuItems" :key="index">
+              <option v-for="(item, index) in menuItems" :key="index" :value="item.id">
                 {{ item.name }}
               </option>
             </select>
@@ -50,18 +54,19 @@
             <div class="w-full h-full flex flex-col gap-2">
               <span class="uppercase font-medium text-sm">Talabalik turi</span>
               <select
-                v-model="selectedStudentType"
+                v-model="form.type"
                 class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
               >
-                <option value="">Talaba turini tanlang</option>
-                <option value="" v-for="(item, index) in studentType" :key="index">
-                  {{ item.type }}
+                <option value="" disabled>Talaba turini tanlang</option>
+                <option :value="item.id" v-for="(item, index) in studentType" :key="index">
+                  {{ Number(item.type) }}
                 </option>
               </select>
             </div>
             <div class="w-full h-full flex flex-col gap-2">
               <span class="uppercase font-medium text-sm">Kontrakt summa</span>
               <input
+                v-model="form.summa"
                 type="number"
                 placeholder="Summani kiriting"
                 class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -71,12 +76,13 @@
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="w-full justify-end flex">
             <button
+              type="submit"
               class="w-[155px] h-[42px] gap-2.5 flex items-center justify-center bg-[#3366FF] rounded text-white hover:bg-blue-700 cursor-pointer right-0"
             >
               <img class="w-6 h-6" src="@/assets/plus.png" alt="" /> Qo'shish
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
@@ -85,15 +91,24 @@
 <script setup lang="ts">
 import ApiService from '@/service/ApiService.ts'
 import { onMounted, ref } from 'vue'
+import type { CreatedStudent } from '@/models/projectModel.ts'
 
-const studentType = ref<string>()
-const emit = defineEmits(['formSave'])
-const selectedInstitute = ref('')
-const selectedStudentType = ref('')
+const emit = defineEmits(['studentAdded', 'close'])
+
+const studentType = ref([
+  {
+    id: 1,
+    type: 1,
+  },
+  {
+    id: 2,
+    type: 2,
+  }
+])
 
 
-const formSave = () => {
-  emit('formSave')
+const closeAddForm = () => {
+  emit('close')
 }
 
 const menuItems = ref([
@@ -103,13 +118,33 @@ const menuItems = ref([
   },
 ])
 
-const getStudentType = async () => {
+const form = ref<CreatedStudent>({
+  id: null,
+  full_name: '',
+  phone: '',
+  institute: null,
+  type: null,
+  summa: null
+});
+
+const saveForm = async () => {
   try {
-    const response = await ApiService.getAllStudents()
-    studentType.value = response.results
+    const res = await ApiService.createdStudent(form.value)
+
+    emit('studentAdded', res)
+    emit('close')
+
+    form.value = {
+      id: null,
+      full_name: '',
+      phone: '',
+      institute: null,
+      type: null,
+      summa: null
+    }
   }
   catch (error) {
-    console.error('Error getStudentType', error)
+    console.error(error)
   }
 }
 
@@ -120,54 +155,8 @@ const instituteList = async () => {
     console.error(error)
   }
 }
-const sponsorMoney = [
-  {
-    id: 1,
-    label: '30 000 000 UZS',
-    value: '30 000 000 UZS',
-  },
-  {
-    id: 2,
-    label: '50 000 000 UZS',
-    value: '50 000 000 UZS',
-  },
-  {
-    id: 3,
-    label: '1 000 000 UZS',
-    value: '1 000 000 UZS',
-  },
-  {
-    id: 4,
-    label: '5 000 000 UZS',
-    value: '5 000 000 UZS',
-  },
-  {
-    id: 5,
-    label: '7 000 000 UZS',
-    value: '7 000 000 UZS',
-  },
-]
-
-const statusPayment = [
-  {
-    id: 1,
-    label: 'Pul utkazmalari',
-    value: 'Pul utkazmalari',
-  },
-  {
-    id: 2,
-    label: 'Naqd tulov',
-    value: 'Naqd tulov',
-  },
-  {
-    id: 3,
-    label: 'Karta orqali',
-    value: 'Karta orqali',
-  },
-]
 
 onMounted(() => {
   instituteList()
-  getStudentType()
 })
 </script>

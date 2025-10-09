@@ -1,5 +1,17 @@
 <template>
-  <div class="flex flex-col h-full w-full">
+  <StudentInfo
+    v-if="isEditing"
+    :is-editing="isEditing"
+    :studentData="selectedStudents"
+    @save-edits="saveEdits"
+    @close-form-page="isEditing = false"
+  />
+  <AddStudent
+    v-else-if="addStudentForm"
+    @close="formAddClose"
+    @studentAdded="submitForm"
+  />
+  <div v-else class="flex flex-col h-full w-full">
     <div class="flex flex-col bg-gray-50 h-[88px] w-full">
       <div class="flex w-7xl m-auto pt-5 h-full">
         <div class="flex justify-between w-full h-[40px]">
@@ -13,11 +25,11 @@
               >
               <span
                 class="w-[180px] cursor-pointer hover:bg-blue-700 hover:text-white flex justify-center h-full items-center"
-                ><router-link to="/sponsor">Homiylar</router-link></span
+                ><router-link to="/sponsors">Homiylar</router-link></span
               >
               <span
                 class="w-[180px] cursor-pointer bg-[#3366FF] text-white hover:bg-blue-700 hover:text-white rounded-br rounded-tr flex justify-center border-l-2 border-[#E0E7FF] h-full items-center"
-                ><router-link to="/student">Talabalar</router-link></span
+                ><router-link to="/students">Talabalar</router-link></span
               >
             </div>
           </div>
@@ -29,7 +41,7 @@
             <button
               class="bg-[#EDF1FD] rounded justify-center items-center gap-4 w-[120px] h-full cursor-pointer flex"
               type="button"
-              @click="visibleForm"
+              @click="visibleFilterForm"
             >
               <img src="@/assets/filter.png" alt="" />
               <span class="text-[#3365FC]">Filter</span>
@@ -82,7 +94,7 @@
               <td class="px-2 items-center flex h-full justify-center gap-2">{{ item.given }}<span>UZS</span></td>
               <td class="px-2 text-center">{{item.contract}}</td>
               <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer" @click="studentClick">
+                <button type="button" class="cursor-pointer" @click="studentClick(item)">
                   <img src="@/assets/eye.png" alt="" />
                 </button>
               </td>
@@ -98,7 +110,7 @@
         <div class="w-[560px] h-[390px] items-start bg-white rounded-lg flex flex-col p-6 gap-6">
           <div class="flex items-center w-full justify-between">
             <h2 class="font-medium text-xl">Filter</h2>
-            <button @click="closeForm()" class="cursor-pointer flex">
+            <button @click="closeFilterForm()" class="cursor-pointer flex">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
@@ -167,12 +179,18 @@
 import ApiService from '@/service/ApiService.ts'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import StudentInfo from '@/components/StudentInfo.vue'
+import AddStudent from '@/components/AddStudent.vue'
 
 const router = useRouter()
 const getStudentsAll = ref([]);
 const filterVisible = ref(false);
 const selectedType = ref('');
 const getInstitute = ref('')
+const isEditing = ref(false);
+const selectedStudents = ref(null);
+const addStudentForm = ref(false);
+
 
 const institutesAll = ref([
   {
@@ -180,24 +198,49 @@ const institutesAll = ref([
     name: ''
   }
 ])
-const visibleForm = () => {
+
+
+const submitForm = async (newStudent: object) => {
+  getStudentsAll.value.push(newStudent)
+  addStudentForm.value = false
+}
+
+const saveEdits = () => {
+  try {
+
+  }
+  catch (error) {
+    console.log(error)
+  }
+}
+
+const visibleFilterForm = () => {
   filterVisible.value = true
 }
-const closeForm = () => {
+const closeFilterForm = () => {
   filterVisible.value = false
 }
 
+const formAddClose = () => {
+  addStudentForm.value = false
+}
 const addStudentItem = () => {
-  router.push('/addStudent')
+  addStudentForm.value = true
 }
 
-const studentClick = () => {
-  router.push('/students')
+const studentClick = (student: any) => {
+  selectedStudents.value = student
+  isEditing.value = true
 }
+
 const allStudents = async () => {
-  const response = await ApiService.getAllStudents()
-  getStudentsAll.value = response.results
-  console.log(response)
+  try {
+    const response = await ApiService.getAllStudents()
+    getStudentsAll.value = response?.results
+  }
+  catch (error) {
+    console.log(error)
+  }
 }
 
 const getInstituteAll = async () => {
@@ -210,9 +253,19 @@ const getInstituteAll = async () => {
 }
 
 onMounted(() => {
+  submitForm()
   allStudents()
   getInstituteAll()
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+table {
+  border-collapse: separate;
+  border-spacing: 0 12px;
+}
+tbody tr {
+  height: 68px;
+  margin-top: 12px;
+}
+</style>

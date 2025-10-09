@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { useAuthStore } from '@/stores/store.ts'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -13,31 +14,25 @@ const routes: Array<RouteRecordRaw> = [
         path: '/dashboard',
         name: 'Dashboard',
         component: () => import((`../views/DashboardVue.vue`)),
-      },
-      {
-        path: '/sponsor',
-        name: 'Sponsor',
-        component: () => import((`../views/sponsorVue.vue`)),
+        meta: {requiresAuth: true},
       },
       {
         path: '/sponsors',
         name: 'Sponsors',
-        component: () => import(('../components/AddSponsor.vue')),
+        component: () => import((`../views/sponsorsVue.vue`)),
+        meta: {requiresAuth: true},
       },
       {
-        path: '/student',
-        name: 'Student',
-        component: () => import((`../views/studentsVue.vue`))
+        path: '/sponsor',
+        name: 'Sponsor',
+        component: () => import(('../components/Sponsor.vue')),
+        meta: {requiresAuth: true},
       },
       {
-        path: '/addStudent',
-        name: 'AddStudent',
-        component: () => import((`../components/AddStudent.vue`)),
-      },
-      {
-        path: "/students",
-        name: "Students",
-        component: () => import((`../components/StudentInfo.vue`)),
+        path: '/students',
+        name: 'Students',
+        component: () => import((`../views/studentsVue.vue`)),
+        meta: {requiresAuth: true},
       }
     ]
   },
@@ -46,10 +41,27 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Login',
     component: () => import((`../views/loginVue.vue`)),
   },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login',
+  },
 ]
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+})
+
+router.beforeEach((to, _, next) => {
+  const authStore = useAuthStore()
+  authStore.loadFromStorage()
+
+  if(to.meta?.requiresAuth && !authStore.isAuthenticated) {
+    next("/login")
+  } else if(to.path === '/login' && authStore.isAuthenticated) {
+    next('/dashboard')
+  } else {
+    next()
+  }
 })
 
 export default router
