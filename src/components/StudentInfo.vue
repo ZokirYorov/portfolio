@@ -9,7 +9,7 @@
           >
             <img src="@/assets/arrowLeft.png" alt="" />
           </button>
-          <div class="font-medium text-xl">{{ studentData.full_name }}</div>
+          <div class="font-medium text-xl">{{ studentData["full_name"] }}</div>
         </div>
         <button
           class="w-[197px] bg-[#EDF1FD] rounded h-[42px] text-[#3365FC] cursor-pointer hover:bg-blue-200"
@@ -51,12 +51,12 @@
           <div class="w-[247px] h-[64px] flex items-center gap-4">
             <img src="@/assets/userItem.png" alt="" />
             <span class="font-medium flex w-full items-center h-[64px]">{{
-              studentData.full_name
+              studentData["full_name"]
             }}</span>
           </div>
           <div class="w-full flex flex-col gap-2 h-[45px]">
             <span class="uppercase text-sm text-[#B5B5C3] font-medium">Telefon raqami</span>
-            <span>+{{ studentData.phone }}</span>
+            <span>+{{ studentData["phone"] }}</span>
           </div>
         </div>
         <div class="flex flex-col gap-6 w-full">
@@ -77,25 +77,25 @@
           <div class="flex w-full justify-between items-center">
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Otm</span>
-              <span class="font-medium">{{ studentData.institute.name }}</span>
+              <span class="font-medium">{{ studentData["institute"].name }}</span>
             </div>
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Talabalik turi</span>
-              <span class="font-medium">{{ studentData.type }}</span>
+              <span class="font-medium">{{ studentData["type"] }}</span>
             </div>
           </div>
           <div class="flex w-full justify-between">
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Ajratilgan summa</span>
               <span class="font-medium gap-2 flex"
-                ><span>{{ studentData.given }}</span
+                ><span>{{ studentData["given"] }}</span
                 >uzs</span
               >
             </div>
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Kontrakt miqdori</span>
               <span class="font-medium flex gap-2"
-                ><span>{{ studentData.contract }}</span
+                ><span>{{ studentData["contract"] }}</span
                 >uzs</span
               >
             </div>
@@ -189,7 +189,7 @@
         <div class="w-full text-[#2E384D] h-[64px] flex flex-col gap-2">
           <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharifingiz)</span>
           <input
-            v-model="studentData.full_name"
+            v-model="studentData['full_name']"
             type="text"
             placeholder="Ism sharifingizni kiriting"
             class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -198,7 +198,7 @@
         <div class="w-full text-[#2E384D] h-[64px] flex flex-col gap-2">
           <span class="flex text-sm font-medium uppercase">Telefon raqami</span>
           <input
-            v-model="studentData.phone"
+            v-model="studentData['phone']"
             type="number"
             placeholder="+99899 656-33-96"
             class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -212,13 +212,13 @@
             name=""
             id=""
           >
-            <option value="">{{ studentData.institute.name }}</option>
+            <option value="">{{ studentData["institute"].name }}</option>
           </select>
         </div>
         <div class="w-full h-[64px] flex flex-col gap-2">
           <span class="flex text-sm font-medium uppercase">Kontrakt miqdori</span>
           <input
-            v-model="studentData.contract"
+            v-model="studentData['contract']"
             type="number"
             placeholder="30 000 000"
             class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -240,7 +240,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 
 const emit = defineEmits(['saveEdits', 'closeFormPage'])
 defineProps<{

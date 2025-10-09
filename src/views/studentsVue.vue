@@ -6,11 +6,7 @@
     @save-edits="saveEdits"
     @close-form-page="isEditing = false"
   />
-  <AddStudent
-    v-else-if="addStudentForm"
-    @close="formAddClose"
-    @studentAdded="submitForm"
-  />
+  <AddStudent v-else-if="addStudentForm" @close="formAddClose" @studentAdded="submitForm" />
   <div v-else class="flex flex-col h-full w-full">
     <div class="flex flex-col bg-gray-50 h-[88px] w-full">
       <div class="flex w-7xl m-auto pt-5 h-full">
@@ -51,11 +47,13 @@
       </div>
     </div>
     <div class="w-7xl flex m-auto justify-end my-7 h-[42px]">
-      <button class="right-10 gap-2.5 flex bg-[#3366FF] hover:bg-blue-700 cursor-pointer w-[190px] items-center justify-center text-white rounded"
-              @click="addStudentItem"
+      <button
+        class="right-10 gap-2.5 flex bg-[#3366FF] hover:bg-blue-700 cursor-pointer w-[190px] items-center justify-center text-white rounded"
+        @click="addStudentItem"
       >
-        <img class="w-6 h-6" src="@/assets/plus.png" alt="">
-        Talaba qo'shish</button>
+        <img class="w-6 h-6" src="@/assets/plus.png" alt="" />
+        Talaba qo'shish
+      </button>
     </div>
     <div class="flex flex-col w-7xl m-auto items-center justify-center h-full">
       <div class="flex w-full h-full">
@@ -88,11 +86,13 @@
               class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
             >
               <td class="px-2">{{ index + 1 }}</td>
-              <td class="px-2 text-left">{{ item.full_name }}</td>
+              <td class="px-2 text-left">{{ item[`full_name`]}}</td>
               <td class="px-2 text-center">{{ item.type }}</td>
-              <td class="px-2 text-center">{{ item.institute.name }}</td>
-              <td class="px-2 items-center flex h-full justify-center gap-2">{{ item.given }}<span>UZS</span></td>
-              <td class="px-2 text-center">{{item.contract}}</td>
+              <td class="px-2 text-center">{{ item[`institute`].name }}</td>
+              <td class="px-2 items-center flex h-full justify-center gap-2">
+                {{ item[`given`] }}<span>UZS</span>
+              </td>
+              <td class="px-2 text-center">{{ item[`contract`] }}</td>
               <td class="px-2 text-center">
                 <button type="button" class="cursor-pointer" @click="studentClick(item)">
                   <img src="@/assets/eye.png" alt="" />
@@ -132,11 +132,8 @@
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled>Barchasi</option>
-              <option
-                v-for="(item, index) in getStudentsAll"
-                :key="index"
-              >
-                {{item.type}}
+              <option v-for="(item, index) in getStudentsAll" :key="index">
+                {{ item.type }}
               </option>
             </select>
           </div>
@@ -148,11 +145,8 @@
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="" disabled>Barchasi</option>
-              <option
-                v-for="(item, index) in institutesAll"
-                :key="index"
-              >
-                {{item.name}}
+              <option v-for="(item, index) in institutesAll" :key="index">
+                {{ item.name }}
               </option>
             </select>
           </div>
@@ -183,35 +177,35 @@ import StudentInfo from '@/components/StudentInfo.vue'
 import AddStudent from '@/components/AddStudent.vue'
 
 const router = useRouter()
-const getStudentsAll = ref([]);
-const filterVisible = ref(false);
-const selectedType = ref('');
+const getStudentsAll = ref([])
+const filterVisible = ref(false)
+const selectedType = ref('')
 const getInstitute = ref('')
-const isEditing = ref(false);
-const selectedStudents = ref(null);
-const addStudentForm = ref(false);
-
+const isEditing = ref(false)
+const selectedStudents = ref(null)
+const addStudentForm = ref(false)
 
 const institutesAll = ref([
   {
     id: 0,
-    name: ''
-  }
+    name: '',
+  },
 ])
 
-
 const submitForm = async (newStudent: object) => {
-  getStudentsAll.value.push(newStudent)
+  getStudentsAll.value.unshift(newStudent)
   addStudentForm.value = false
+  isEditing.value = false
+  await allStudents
 }
 
-const saveEdits = () => {
-  try {
+const saveEdits = (updated: any) => {
+  const index = getStudentsAll.value.findIndex((s) => s.id === updated.id)
+  if (index !== -1) {
+    getStudentsAll.value[index] = updated
+  }
+    isEditing.value = false
 
-  }
-  catch (error) {
-    console.log(error)
-  }
 }
 
 const visibleFilterForm = () => {
@@ -237,8 +231,7 @@ const allStudents = async () => {
   try {
     const response = await ApiService.getAllStudents()
     getStudentsAll.value = response?.results
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }
@@ -246,8 +239,7 @@ const allStudents = async () => {
 const getInstituteAll = async () => {
   try {
     institutesAll.value = await ApiService.getInstituteList()
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error)
   }
 }

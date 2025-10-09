@@ -64,7 +64,7 @@ export const ApiServices = {
   },
   async createdStudent(item: CreatedStudent): Promise<any> {
     const response = await axiosInstance.post(
-      `/student-create/`, item
+      `https://metsenatclub.xn--h28h.uz/api/v1/student-create/`, item
     )
     return response.data
   },

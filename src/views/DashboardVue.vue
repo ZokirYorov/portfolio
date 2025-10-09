@@ -46,7 +46,7 @@
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">Jami to'langan summa</span>
               <span class="flex gap-1.5 text-xl"
-                >{{dashboardForm?.total_must_pay}} <span class="text-[#B2B7C1]">UZS</span>
+                >{{dashboardForm?.["total_must_pay"]}} <span class="text-[#B2B7C1]">UZS</span>
               </span>
             </div>
           </div>
@@ -55,7 +55,7 @@
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">Jami so'ralgan summa</span>
               <span class="flex gap-1.5 text-xl"
-                >{{dashboardForm?.total_need}}<span class="text-[#B2B7C1]">UZS</span>
+                >{{dashboardForm?.["total_need"]}}<span class="text-[#B2B7C1]">UZS</span>
               </span>
             </div>
           </div>
@@ -64,7 +64,7 @@
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">To'lanishi kerak summa</span>
               <span class="flex gap-1.5 text-xl"
-                >{{dashboardForm.total_paid}}<span class="text-[#B2B7C1]">UZS</span>
+                >{{dashboardForm?.["total_paid"]}}<span class="text-[#B2B7C1]">UZS</span>
               </span>
             </div>
           </div>

@@ -41,10 +41,10 @@
           <div class="w-full flex flex-col gap-2 h-[70px]">
             <span class="font-medium text-sm uppercase text-sm">Otm</span>
             <select
-              v-model="form.institute"
+              v-model="selectedInstitute"
               class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[45px] w-full"
             >
-              <option value="" disabled selected class="uppercase">Institutni tanlang</option>
+              <option value="" disabled class="uppercase">Institutni tanlang</option>
               <option v-for="(item, index) in menuItems" :key="index" :value="item.id">
                 {{ item.name }}
               </option>
@@ -54,19 +54,19 @@
             <div class="w-full h-full flex flex-col gap-2">
               <span class="uppercase font-medium text-sm">Talabalik turi</span>
               <select
-                v-model="form.type"
+                v-model="selectedType"
                 class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
               >
                 <option value="" disabled>Talaba turini tanlang</option>
                 <option :value="item.id" v-for="(item, index) in studentType" :key="index">
-                  {{ Number(item.type) }}
+                  {{ item.type }}
                 </option>
               </select>
             </div>
             <div class="w-full h-full flex flex-col gap-2">
               <span class="uppercase font-medium text-sm">Kontrakt summa</span>
               <input
-                v-model="form.summa"
+                v-model="form['contract']"
                 type="number"
                 placeholder="Summani kiriting"
                 class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -95,6 +95,8 @@ import type { CreatedStudent } from '@/models/projectModel.ts'
 
 const emit = defineEmits(['studentAdded', 'close'])
 
+const selectedInstitute = ref('')
+const selectedType = ref('')
 const studentType = ref([
   {
     id: 1,
