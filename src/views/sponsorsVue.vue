@@ -71,14 +71,17 @@
               class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
             >
               <td class="px-2">{{ index + 1 }}</td>
-              <td class="px-2 text-left">{{ sponsor.full_name }}</td>
+              <td class="px-2 text-left">{{ sponsor[`full_name`] }}</td>
               <td class="px-2 text-center">{{ sponsor.phone }}</td>
               <td class="px-2 flex items-center justify-center gap-2 h-full">
                 {{ sponsor['sum'] }}<span>UZS</span>
               </td>
-              <td class="px-2 text-center">{{ sponsor.spent }}<span>UZS</span></td>
-              <td class="px-2 text-center">{{ formatDate(sponsor.created_at) }}</td>
-              <td :class="['px-2 text-center', statusChange[sponsor['get_status_display']]]">{{ sponsor.get_status_display }}</td>
+              <td class="px-2 text-center">
+                {{ sponsor.spent }}<span>UZS</span>{{ formatDate(sponsor.created_at) }}
+              </td>
+              <td :class="['px-2 text-center', statusChange[sponsor['get_status_display']]]">
+                {{ sponsor.get_status_display }}
+              </td>
               <td class="px-2 text-center">
                 <button type="button" class="cursor-pointer" @click="clickSponsor()">
                   <img src="@/assets/eye.png" alt="" />
