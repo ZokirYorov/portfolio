@@ -12,6 +12,7 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss()
   ],
+  base: process.env.VITE_API_BASE_URL || '/',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
