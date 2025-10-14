@@ -23,12 +23,6 @@ const routes: Array<RouteRecordRaw> = [
         meta: {requiresAuth: true},
       },
       {
-        path: '/sponsor',
-        name: 'Sponsor',
-        component: () => import(('../components/Sponsor.vue')),
-        meta: {requiresAuth: true},
-      },
-      {
         path: '/students',
         name: 'Students',
         component: () => import((`../views/studentsVue.vue`)),

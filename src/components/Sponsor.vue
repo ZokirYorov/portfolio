@@ -4,20 +4,20 @@
       <div class="flex items-center w-7xl gap-3 m-auto">
         <button
           class="bg-gray-200 flex cursor-pointer w-10 items-center justify-center h-8 rounded-sm"
-          @click="$router.back()"
+          @click="closeFormPage"
         >
           <img src="@/assets/arrowLeft.png" alt="" />
         </button>
-        <h2 class="font-medium text-2xl">Amonov Ilhom Aliyevich</h2>
+        <h2 class="font-medium text-2xl">{{sponsorData['full_name']}}</h2>
         <span
-          class="flex items-center justify-center bg-[#DDFFF2] rounded w-[100px] h-[25px] leading-snug p-2 text-[#00CF83]"
-          >Tasdiqlangan</span
+          :class="['flex items-center justify-center rounded h-[25px] leading-snug p-2', sponsorStatus[sponsorData['get_status_display']]]"
+          >{{sponsorData['get_status_display']}}</span
         >
       </div>
     </div>
-    <div class="flex flex-1 justify-center mt-10 h-[260px]">
+    <div class="flex flex-1 justify-center mt-10 min-h-[326px]">
       <div
-        class="flex flex-col h-[260px] items-center justify-between p-8 w-[800px] bg-white rounded-xl shadow"
+        class="flex flex-col h-full items-center justify-between p-8 w-[800px] bg-white rounded-xl shadow"
       >
         <div class="flex flex-col gap-6 w-full">
           <div class="flex items-center justify-between">
@@ -32,19 +32,23 @@
           <div class="flex gap-6 w-full flex-col">
             <div class="flex items-center h-[64px] gap-5">
               <img src="@/assets/person.png" alt="" />
-              <span class="font-medium">{{sponsorUpdate}}</span>
+              <span class="font-medium">{{sponsorData['full_name']}}</span>
             </div>
             <div class="flex items-center justify-between w-[500px] h-[47px]">
               <div class="flex justify-between flex-col w-[147px] h-full">
-                <span class="text-[#B5B5C3] font-500 text-sm">TELEFON RAQAM</span>
-                <span class="font-medium text-md">+99899 973-72-60</span>
+                <span class="text-[#B5B5C3] font-500 text-sm uppercase">Telefon raqam</span>
+                <span class="font-medium text-md">{{sponsorData['phone']}}</span>
               </div>
               <div class="flex justify-between flex-col w-[147px] h-full">
-                <span class="text-[#B5B5C3] font-500 text-sm uppercase">homiylik summasi</span>
-                <span class="font-medium text-md"
-                  >30 000 000 <span class="uppercase">uzs</span></span
+                <span class="text-[#B5B5C3] font-500 text-sm uppercase">Homiylik summasi</span>
+                <span class="font-medium gap-1 flex text-md"
+                  >{{sponsorData['sum']}}<span class="uppercase">uzs</span></span
                 >
               </div>
+            </div>
+            <div v-if="sponsorData['firm']" class="flex flex-col w-full h-[43px] gap-2">
+              <span class="uppercase font-500 text-sm text-[#B5B5C3]">Tashkilot nomi</span>
+              <span class="font-medium">{{sponsorData['firm']}}</span>
             </div>
           </div>
         </div>
@@ -85,8 +89,8 @@
           >
             <button
               class="uppercase flex items-center justify-center h-full cursor-pointer rounded-bl-md rounded-tl-md hover:bg-blue-400 hover:text-white w-full border-[#E0E7FF] font-500"
-              @click="setType('phsical')"
-              :class="activeType === 'phsical' ? 'bg-[#3366FF] text-white' : 'text-[#3366FF99]'"
+              @click="setType('physical')"
+              :class="activeType === 'physical' ? 'bg-[#3366FF] text-white' : 'text-[#3366FF99]'"
             >
               Jismoniy shaxs
             </button>
@@ -146,7 +150,7 @@
             id="status"
             class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="" disabled>To'lov turini tanlang</option>
+            <option value="" disabled>Pul o'tkazmalari</option>
             <option v-for="(item, index) in statusPayment" :key="index">
               {{ item.title }}
             </option>
@@ -155,6 +159,7 @@
         <div v-if="activeType === 'legal'" class="flex flex-col w-full h-[64px] gap-2">
           <span class="uppercase h-[14px] text-sm flex font-medium">Tashkilot nomi</span>
           <input
+            v-model="sponsorData['firm']"
             type="text"
             placeholder="Orient Group"
             class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -178,28 +183,53 @@
 import { onMounted, ref } from 'vue'
 import ApiServices from '@/service/ApiService.ts'
 
-const emit = defineEmits(['formSave'])
+defineProps<{
+  sponsorData: Object
+}>()
+
+
+const emit = defineEmits(['formSave', 'close'])
 const editingForm = ref(false);
 const selectedPayment = ref('');
 
 const sponsorUpdate = ref([]);
 
-const activeType = ref<'phsical' | 'legal'>('phsical')
+const sponsorStatus: Record<string, string> = {
+  Yangi: 'text-[#5BABF2] bg-blue-100',
+  Moderatsiyada: 'text-[#FFA445] bg-yellow-100',
+  Tasdiqlangan: 'text-[#00CF83] bg-[#DDFFF2]',
+  Bekor_qilingan: 'text-[#979797] bg-gray-100',
+}
 
-const setType = (type: 'phsical' | 'legal') => {
+
+const activeType = ref<'physical' | 'legal'>('physical')
+
+const setType = (type: 'physical' | 'legal') => {
   activeType.value = type
 }
+
+const closeFormPage = () => {
+  emit('close')
+}
+
+
 const filterClose = () => {
   editingForm.value = false
 }
 
 const clickForm = () => {
   editingForm.value = true
+  if (sponsorData['firm'] && sponsorStatus['firm'].trim() !== '') {
+    activeType.value = 'legal'
+  } else {
+    activeType.value = 'physical'
+  }
 }
 
 const sponsorEditForm = async () => {
-  const response = await ApiServices.updateSponsor()
-  sponsorUpdate.value = response.data
+
+  // const response = await ApiServices.updateSponsor()
+  // sponsorUpdate.value = response.data
 
 }
 const formSave = () => {

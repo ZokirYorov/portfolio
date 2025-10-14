@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="w-full flex flex-col gap-2 h-[70px]">
-            <span class="font-medium text-sm uppercase text-sm">Otm</span>
+            <span class="font-medium uppercase text-sm">Otm</span>
             <select
               v-model="selectedInstitute"
               class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[45px] w-full"
@@ -58,7 +58,9 @@
                 class="flex rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
               >
                 <option value="" disabled>Talaba turini tanlang</option>
-                <option :value="item.id" v-for="(item, index) in studentType" :key="index">
+                <option :value="item.id"
+                        v-for="(item, index) in studentType"
+                        :key="index">
                   {{ item.type }}
                 </option>
               </select>
@@ -100,11 +102,11 @@ const selectedType = ref('')
 const studentType = ref([
   {
     id: 1,
-    type: 1,
+    type: 'Bakalavr',
   },
   {
     id: 2,
-    type: 2,
+    type: 'Magistr',
   }
 ])
 
@@ -126,13 +128,16 @@ const form = ref<CreatedStudent>({
   phone: '',
   institute: null,
   type: null,
-  summa: null
+  summa: null,
+  contract: null
 });
 
 const saveForm = async () => {
   try {
+    form.value.institute = selectedInstitute.value
+    form.value.type = selectedType.value
     const res = await ApiService.createdStudent(form.value)
-
+console.log( 'apilar', res)
     emit('studentAdded', res)
     emit('close')
 
@@ -142,8 +147,11 @@ const saveForm = async () => {
       phone: '',
       institute: null,
       type: null,
-      summa: null
+      summa: null,
+      contract: null,
     }
+    selectedInstitute.value = ''
+    selectedType.value = ''
   }
   catch (error) {
     console.error(error)

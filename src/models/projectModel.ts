@@ -16,4 +16,12 @@ export interface CreatedStudent {
   institute: number | null;
   type: number | null;
   summa: number | null;
+  contract: number | null;
+}
+
+export interface SponsorForm {
+  id: number | null;
+  sponsor: string;
+  summa: number | null;
+  student: string;
 }

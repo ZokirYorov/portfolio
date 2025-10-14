@@ -9,7 +9,7 @@
           >
             <img src="@/assets/arrowLeft.png" alt="" />
           </button>
-          <div class="font-medium text-xl">{{ studentData["full_name"] }}</div>
+          <div class="font-medium text-xl">{{ studentData['full_name'] }}</div>
         </div>
         <button
           class="w-[197px] bg-[#EDF1FD] rounded h-[42px] text-[#3365FC] cursor-pointer hover:bg-blue-200"
@@ -51,12 +51,12 @@
           <div class="w-[247px] h-[64px] flex items-center gap-4">
             <img src="@/assets/userItem.png" alt="" />
             <span class="font-medium flex w-full items-center h-[64px]">{{
-              studentData["full_name"]
+              studentData['full_name']
             }}</span>
           </div>
           <div class="w-full flex flex-col gap-2 h-[45px]">
             <span class="uppercase text-sm text-[#B5B5C3] font-medium">Telefon raqami</span>
-            <span>+{{ studentData["phone"] }}</span>
+            <span>{{ studentData['phone'] }}</span>
           </div>
         </div>
         <div class="flex flex-col gap-6 w-full">
@@ -77,25 +77,25 @@
           <div class="flex w-full justify-between items-center">
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Otm</span>
-              <span class="font-medium">{{ studentData["institute"].name }}</span>
+              <span class="font-medium">{{ studentData['institute'].name }}</span>
             </div>
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Talabalik turi</span>
-              <span class="font-medium">{{ studentData["type"] }}</span>
+              <span class="font-medium">{{ studentItem[studentData['type']] }}</span>
             </div>
           </div>
           <div class="flex w-full justify-between">
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Ajratilgan summa</span>
               <span class="font-medium gap-2 flex"
-                ><span>{{ studentData["given"] }}</span
+                ><span>{{ studentData['given'] }}</span
                 >uzs</span
               >
             </div>
             <div class="flex flex-col w-full justify-between">
               <span class="uppercase text-sm text-[#B5B5C3] font-medium">Kontrakt miqdori</span>
               <span class="font-medium flex gap-2"
-                ><span>{{ studentData["contract"] }}</span
+                ><span>{{ studentData['contract'] }}</span
                 >uzs</span
               >
             </div>
@@ -103,15 +103,47 @@
         </div>
       </div>
       <div
-        class="flex w-[790px] items-center justify-between px-8 py-6 h-[90px] border border-[#EBEEFC] bg-white rounded-2xl"
+        class="flex flex-col w-[790px] gap-4 items-center justify-between px-8 py-6 h-full border border-[#EBEEFC] bg-white rounded-2xl"
       >
-        <span class="text-2xl font-semibold">Talabaga homiylar</span>
-        <button
-          class="w-[197px] bg-[#EDF1FD] rounded h-[42px] text-[#3365FC] cursor-pointer hover:bg-blue-200"
-          @click="addSponsor"
-        >
-          + Homiy qo'shish
-        </button>
+        <div class="flex items-center w-full justify-between">
+          <span class="text-2xl font-semibold">Talabaga homiylar</span>
+          <button
+            class="w-[197px] bg-[#EDF1FD] rounded h-[42px] text-[#3365FC] cursor-pointer hover:bg-blue-200"
+            @click="addSponsor"
+          >
+            + Homiy qo'shish
+          </button>
+        </div>
+        <div class="flex w-full h-full">
+          <table class="w-full h-full gap-4 border-separate border-spacing-y-[12px]">
+            <thead>
+              <tr>
+                <th class="px-2 text-center">#</th>
+                <th class="uppercase text-left px-2">F.I.SH</th>
+                <th class="uppercase items-center px-2">Ajratilgan summa</th>
+                <th class="uppercase items-center px-2">Amallar</th>
+              </tr>
+            </thead>
+            <tbody class="gap-2">
+              <tr
+                class="border-blue-2 border-[#2E5BFF14] bg-[#FBFBFC] hover:bg-gray-100 rounded-2xl h-17"
+                v-for="(item, index) in pushSponsorForm"
+                :key="index"
+              >
+                <td class="px-4 py-6">{{ index + 1 }}</td>
+                <td>{{item.sponsor_name}}</td>
+                <td class="text-center">{{ item.summa }}</td>
+                <td class="items-center">
+                  <button class="cursor-pointer"
+                          @click="editSponsor(item)"
+                  >
+                    <img src="@/assets/eye.png" alt="">
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <img class="w-[820px]" src="@/assets/photoIcon.png" alt="" />
     </div>
@@ -123,7 +155,7 @@
       <div class="flex flex-col w-[586px] h-[394px] bg-white rounded-2xl justify-between">
         <div class="flex flex-col gap-7 w-full justify-between p-6">
           <div class="flex w-full items-center justify-between">
-            <span class="font-medium text-2xl">Homiy qo'shish</span>
+            <span class="font-medium text-2xl">{{isEditing ? "Homiylarni tahrirlash" : "Homiy qo'shish"}}</span>
             <button @click="closeForm" class="cursor-pointer flex">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -140,15 +172,20 @@
           <span class="w-full h-0.75 bg-[#F5F5F7]"></span>
           <div class="w-full flex flex-col h-[64px] gap-2">
             <span class="flex text-sm font-medium uppercase">F.i.sh (Familiya ism sharif)</span>
-            <input
-              type="text"
-              placeholder="Ism familiya"
-              class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
-            />
+            <select
+              class="border rounded-lg bg-[#E0E7FF33] text-[#2E384D] border-[#E0E7FF] p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              v-model="sponsorList"
+            >
+              <option value="" disabled>Homiyni tanlang</option>
+              <option v-for="(sponsor, index) in sponsorsAllList" :key="index" :value="sponsor.id">
+                {{ sponsor['full_name'] }}
+              </option>
+            </select>
           </div>
           <div class="w-full h-[64px] flex flex-col gap-2">
             <span class="flex text-sm font-medium uppercase">Ajratilgan summa</span>
             <input
+              v-model="sponsorForm.summa"
               type="number"
               placeholder="Summani kiriting"
               class="flex px-4 py-3 rounded-md bg-[#E0E7FF33] border border-[#E0E7FF] h-[42px] w-full"
@@ -156,9 +193,10 @@
           </div>
           <div class="w-full justify-end flex">
             <button
+              @click="addSponsorSumma(studentData['id'])"
               class="w-[155px] h-[42px] bg-[#3366FF] rounded text-white hover:bg-blue-700 cursor-pointer right-0"
             >
-              + Qo'shish
+              {{isEditing ? "Saqlash" : "+ Qo'shish"}}
             </button>
           </div>
         </div>
@@ -171,7 +209,8 @@
     >
       <div class="flex flex-col w-[586px] h-[578px] gap-7 bg-white rounded-2xl p-6">
         <div class="flex w-full items-center justify-between">
-          <span class="font-medium text-2xl">Tahrirlash</span>
+          <span
+            class="font-medium text-2xl">Tahrirlash</span>
           <button @click="formClose" class="cursor-pointer flex">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -208,11 +247,11 @@
           <span class="flex text-sm font-medium uppercase">Otm</span>
           <select
             v-model="selectedInstitute"
-            class="border rounded-lg bg-[#E0E7FF33] text-[#2E384D] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="border rounded-lg bg-[#E0E7FF33] text-[#2E384D] border-[#E0E7FF] p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             name=""
             id=""
           >
-            <option value="">{{ studentData["institute"].name }}</option>
+            <option value="">{{ studentData['institute'].name }}</option>
           </select>
         </div>
         <div class="w-full h-[64px] flex flex-col gap-2">
@@ -240,17 +279,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import ApiServices from '@/service/ApiService.ts'
+import type { CreatedStudent, SponsorForm } from '@/models/projectModel.ts'
+import { useAuthStore } from '@/stores/store.ts'
 
 const emit = defineEmits(['saveEdits', 'closeFormPage'])
 defineProps<{
-  isEditing: Boolean
   studentData: Object
+  studentItem: any
 }>()
+
+
+const authStore = useAuthStore()
+
 const addSponsorForm = ref(false)
 const visibleEditForm = ref(false)
+const isEditing = ref(false)
 const selectedInstitute = ref('')
+const sponsorList = ref('')
+const sponsorsAllList = ref([])
+const pushSponsorForm = ref<SponsorForm[]>(authStore.sponsors)
 
+const sponsorForm = ref<SponsorForm>({
+  id: null,
+  sponsor: '',
+  summa: null,
+  student: '',
+})
 const formClose = () => {
   visibleEditForm.value = false
 }
@@ -268,7 +324,76 @@ const saveEdits = (studentData: Object) => {
 }
 
 const addSponsor = () => {
+  isEditing.value = false
+  sponsorForm.value = {
+    id: null,
+    sponsor: '',
+    summa: null,
+    student: '',
+  }
   addSponsorForm.value = true
 }
+
+const editSponsor = (item: SponsorForm) => {
+  sponsorForm.value = { ...item }
+  addSponsorForm.value = true
+  isEditing.value = true
+}
+
+const getSponsorsList = async () => {
+  try {
+    const response = await ApiServices.getSponsorList()
+    sponsorsAllList.value = response?.results ? response?.results : []
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const getSponsorName = (id: any) => {
+  const sponsor = sponsorsAllList.value.find((sponsor) => sponsor.id === id);
+  return sponsor ? sponsor.full_name : null
+}
+
+const addSponsorSumma = async (studentId: any) => {
+  try {
+    sponsorForm.value.sponsor = sponsorList.value
+    sponsorForm.value.student = studentId
+
+    const response = await ApiServices.pushSponsorSumma(sponsorForm.value)
+
+    console.log('Sponsorlar', response)
+    if (response) {
+      const getSponsor = getSponsorName(response.sponsor)
+      const neWSponsor = {
+        id: response.id,
+        sponsor: response.sponsor,
+        sponsor_name: getSponsor,
+        student: response.student,
+        summa: response.summa,
+      }
+      pushSponsorForm.value.push(neWSponsor)
+      authStore.addSponsor(neWSponsor)
+      console.log('Sponsor', neWSponsor)
+    }
+
+    console.log(response)
+    sponsorForm.value = {
+      id: null,
+      sponsor: '',
+      summa: null,
+      student: '',
+    }
+    sponsorList.value = ''
+    addSponsorForm.value = false
+    isEditing.value = false
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+onMounted(() => {
+  authStore.loadFromStorage()
+  getSponsorsList()
+})
 </script>
 <style scoped></style>

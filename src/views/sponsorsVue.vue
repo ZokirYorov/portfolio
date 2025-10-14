@@ -1,5 +1,10 @@
 <template>
-  <div class="flex flex-col w-full">
+  <Sponsor
+    :sponsorData="selectedSponsor"
+    v-if="visibleSponsorForm"
+    @close="visibleSponsorForm = false"
+  />
+  <div v-else class="flex flex-col w-full">
     <div class="flex flex-col bg-gray-50 h-[88px] w-full">
       <div class="flex w-7xl m-auto pt-5 h-[88px]">
         <div class="flex justify-between w-full h-[40px]">
@@ -73,14 +78,14 @@
               <td class="px-2">{{ index + 1 }}</td>
               <td class="px-2 text-left">{{ sponsor['full_name'] }}</td>
               <td class="px-2 text-center">{{ sponsor.phone }}</td>
-              <td class="px-2 flex items-center justify-center gap-2 h-full">{{ sponsor['sum'] }}<span>UZS</span></td>
-              <td class="px-2 text-center gap-2">{{ sponsor['spent'] }}<span>UZS</span></td>
+              <td class="px-2 flex items-center justify-center gap-2 h-full">{{ sponsor['sum'] }}<span class="text-gray-400">UZS</span></td>
+              <td class="px-2 text-center gap-2">{{ sponsor['spent'] }}<span class="text-gray-400">UZS</span></td>
               <td class="px-2 text-center">{{ formatDate(sponsor['created_at']) }}</td>
-              <td :class="['px-2 text-center', statusChange[sponsor['get_status_display']]]">
+              <td :class="['px-2 text-center', sponsorsStatuses[sponsor['get_status_display']]]">
                 {{ sponsor['get_status_display'] }}
               </td>
               <td class="px-2 text-center">
-                <button type="button" class="cursor-pointer" @click="clickSponsor()">
+                <button type="button" class="cursor-pointer" @click="clickSponsor(sponsor)">
                   <img src="@/assets/eye.png" alt="" />
                 </button>
               </td>
@@ -93,7 +98,7 @@
         v-if="filterVisible"
         @click.self="filterVisible = false"
       >
-        <div class="w-[560px] h-[600px] items-start bg-white rounded-lg flex flex-col p-4 gap-4">
+        <div class="w-[560px] h-[600px] items-start bg-white rounded-lg flex flex-col p-7 gap-4">
           <div class="flex items-center w-full justify-between">
             <h2 class="font-medium text-xl">Filter</h2>
             <button @click="filterClose()" class="cursor-pointer flex">
@@ -117,7 +122,7 @@
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" disabled selected>Holatni tanlang</option>
+              <option value="" disabled>Barchasi</option>
               <option v-for="(item, index) in sponsorList" :key="index">
                 {{ item['get_status_display'] }}
               </option>
@@ -127,7 +132,7 @@
             <h2 class="mb-2 font-semibold uppercase">Homiylik summasi</h2>
 
             <div class="flex h-full gap-4 w-full">
-              <div class="flex grid grid-cols-4 justify-between items-center w-full gap-3">
+              <div class="grid grid-cols-4 justify-between items-center w-full gap-3">
                 <button
                   :class="selectedSum === 'all' ? 'border-2 border-[#2E5BFF]' : ''"
                   type="button"
@@ -173,10 +178,10 @@
             />
           </div>
           <span class="w-full h-1 bg-[#F5F5F7]"></span>
-          <div class="flex items-center gap-4 h-[40px] justify-end w-full">
+          <div class="flex items-center gap-4 h-[42px] justify-end w-full">
             <button
               @click="clearAll"
-              class="flex text-[#B2B7C1] hover:bg-gray-100 cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2"
+              class="flex text-[#B2B7C1] bg-gray-100 hover:bg-gray-200 cursor-pointer rounded w-[145px] border border-[#B2B7C1] gap-[2px] h-[40px] items-center justify-center px-8 py-2"
             >
               <img src="@/assets/clear.png" alt="" /> Tozalash
             </button>
@@ -193,21 +198,25 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiServices } from '@/service/ApiService.ts'
+import Sponsor from '@/components/Sponsor.vue'
 
 const router = useRouter()
 const filterVisible = ref(false)
 const searchText = ref<number | ''>('')
 const selectedStatus = ref('')
-const dataInput = ref<number | null>()
+const dataInput = ref<number | null>();
+const visibleSponsorForm = ref(false);
 
 const sponsorList = ref([])
 const allMoneys = ref<any[]>([])
 const selectedSum = ref<string | number | null>(null)
+const selectedSponsor = ref(null)
 
-const statusChange: Record<string, string> = {
+
+const sponsorsStatuses: Record<string, string> = {
   Yangi: 'text-[#5BABF2]',
   Moderatsiyada: 'text-[#FFA445]',
   Tasdiqlangan: 'text-[#00CF83]',
@@ -259,8 +268,9 @@ const formatDate = (isoString: string): string => {
   return `${day}.${month}.${year}`
 }
 
-const clickSponsor = () => {
-  router.push('/sponsor')
+const clickSponsor = (item) => {
+  selectedSponsor.value = item
+  visibleSponsorForm.value= true
 }
 
 onMounted(() => {

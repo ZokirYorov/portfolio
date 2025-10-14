@@ -1,6 +1,6 @@
 
 import axiosInstance from "@/axios";
-import type { authLogin, CreatedStudent } from '@/models/projectModel.ts'
+import type { authLogin, CreatedStudent, SponsorForm } from '@/models/projectModel.ts'
 import type { UnwrapRef } from 'vue'
 
 
@@ -25,7 +25,9 @@ export const ApiServices = {
   },
 
   async getAllStudents(): Promise<any[]> {
-    const response = await axiosInstance.get('https://metsenatclub.xn--h28h.uz/api/v1/student-list/');
+    const response = await axiosInstance.get(
+      'https://metsenatclub.xn--h28h.uz/api/v1/student-list/',
+    )
     return response.data
   },
 
@@ -39,6 +41,14 @@ export const ApiServices = {
   async getPaymentsAll(): Promise<any> {
     const response = await axiosInstance.get(
       'https://metsenatclub.xn--h28h.uz/api/v1/payment-type-list/',
+    )
+    return response.data
+  },
+
+  async pushSponsorSumma(sponsor: UnwrapRef<SponsorForm>): Promise<any> {
+    const response = await axiosInstance.post(
+      'https://metsenatclub.xn--h28h.uz/api/v1/sponsor-summa-create/',
+      sponsor,
     )
     return response.data
   },
@@ -64,7 +74,8 @@ export const ApiServices = {
   },
   async createdStudent(item: CreatedStudent): Promise<any> {
     const response = await axiosInstance.post(
-      `https://metsenatclub.xn--h28h.uz/api/v1/student-create/`, item
+      `https://metsenatclub.xn--h28h.uz/api/v1/student-create/`,
+      item,
     )
     return response.data
   },

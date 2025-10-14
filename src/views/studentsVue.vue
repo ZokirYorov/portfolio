@@ -1,9 +1,9 @@
 <template>
   <StudentInfo
     v-if="isEditing"
-    :is-editing="isEditing"
     :studentData="selectedStudents"
     @save-edits="saveEdits"
+    :student-item="studentType"
     @close-form-page="isEditing = false"
   />
   <AddStudent v-else-if="addStudentForm" @close="formAddClose" @studentAdded="submitForm" />
@@ -59,11 +59,11 @@
       <div class="flex w-full h-full">
         <table class="w-full h-full border-separate border-spacing-y-[12px]">
           <colgroup>
-            <col style="width: 1%" />
-            <col style="width: 14%" />
+            <col style="width: 2%" />
+            <col style="width: 12%" />
             <col style="width: 8%" />
             <col style="width: 14%" />
-            <col style="width: 14%" />
+            <col style="width: 10%" />
             <col style="width: 10%" />
             <col style="width: 8%" />
           </colgroup>
@@ -83,16 +83,18 @@
             <tr
               v-for="(item, index) in getStudentsAll"
               :key="index"
-              class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
+              class="bg-white mt-3 items-center rounded-md p-4 hover:bg-gray-50"
             >
-              <td class="px-2">{{ index + 1 }}</td>
-              <td class="px-2 text-left">{{ item['full_name']}}</td>
-              <td class="px-2 text-center">{{ item.type }}</td>
-              <td class="px-2 text-center">{{ item['institute'].name }}</td>
-              <td class="px-2 items-center flex h-full justify-center gap-2">
-                {{ item[`given`] }}<span>UZS</span>
+              <td class="px-3">{{ index + 1 }}</td>
+              <td class="px-4 py-8 text-sm font-rubik font-medium text-left">{{ item['full_name']}}</td>
+              <td class="px-4 py-8 text-sm font-rubik font-medium text-center" >{{ studentType[item.type] }}</td>
+              <td class="px-4 py-8 text-sm font-rubik font-medium text-center">{{ item['institute'].name }}</td>
+              <td class="px-4 py-8 text-sm font-rubik gap-2 font-medium text-center">
+                {{ item[`given`] }}<span class="text-gray-400 ml-2">UZS</span>
               </td>
-              <td class="px-2 text-center">{{ item[`contract`] }}</td>
+              <td class="px-4 py-8 text-sm font-rubik font-medium text-center">
+                {{ item[`contract`] }}<span class="text-gray-400 ml-2">UZS</span>
+              </td>
               <td class="px-2 text-center">
                 <button type="button" class="cursor-pointer" @click="studentClick(item)">
                   <img src="@/assets/eye.png" alt="" />
@@ -133,7 +135,7 @@
             >
               <option value="" disabled>Barchasi</option>
               <option v-for="(item, index) in getStudentsAll" :key="index">
-                {{ item.type }}
+                {{ studentType[item.type] }}
               </option>
             </select>
           </div>
@@ -175,7 +177,9 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import StudentInfo from '@/components/StudentInfo.vue'
 import AddStudent from '@/components/AddStudent.vue'
+import { useAuthStore } from '@/stores/store.ts'
 
+const authStore = useAuthStore()
 const router = useRouter()
 const getStudentsAll = ref([])
 const filterVisible = ref(false)
@@ -192,20 +196,25 @@ const institutesAll = ref([
   },
 ])
 
+const studentType: Record<string, string> = {
+  1: "Bakalavr",
+  2: "Magistr"
+}
+
 const submitForm = async (newStudent: object) => {
   getStudentsAll.value.unshift(newStudent)
   addStudentForm.value = false
   isEditing.value = false
-  await allStudents
+  await allStudents()
 }
 
 const saveEdits = (updated: any) => {
   const index = getStudentsAll.value.findIndex((s) => s.id === updated.id)
   if (index !== -1) {
-    getStudentsAll.value[index] = updated
+    getStudentsAll.value[index] = { ...updated }
+    authStore.updateStudents(getStudentsAll.value[index])
   }
     isEditing.value = false
-
 }
 
 const visibleFilterForm = () => {
@@ -222,7 +231,7 @@ const addStudentItem = () => {
   addStudentForm.value = true
 }
 
-const studentClick = (student: any) => {
+const studentClick = (student) => {
   selectedStudents.value = student
   isEditing.value = true
 }
@@ -247,6 +256,7 @@ const getInstituteAll = async () => {
 onMounted(() => {
   allStudents()
   getInstituteAll()
+  authStore.loadFromStorage()
 })
 </script>
 
