@@ -41,7 +41,7 @@
       <div class="flex w-7xl m-auto py-12 flex-col">
         <div class="flex h-[96px] justify-between w-full"
         >
-          <div class="flex items-center gap-2 h-full p-6 w-[380px] bg-white rounded-md">
+          <div class="flex gap-4 h-full p-6 w-[380px] bg-white rounded-md">
             <img class="w-12 h-12" src="@/assets/money.png" alt="" />
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">Jami to'langan summa</span>
@@ -50,7 +50,7 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center gap-2 h-full p-6 w-[380px] bg-white rounded-md">
+          <div class="flex gap-4 h-full p-6 w-[380px] bg-white rounded-md">
             <img class="w-12 h-12 text-[#EDC7001A]" src="@/assets/money2.png" alt="" />
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">Jami so'ralgan summa</span>
@@ -59,7 +59,7 @@
               </span>
             </div>
           </div>
-          <div class="flex items-center gap-2 h-full p-6 w-[380px] bg-white rounded-md">
+          <div class="flex gap-4 h-full p-6 w-[380px] bg-white rounded-md">
             <img class="w-12 h-12" src="@/assets/money3.png" alt="" />
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">To'lanishi kerak summa</span>
@@ -69,10 +69,8 @@
             </div>
           </div>
         </div>
-        <div class="flex mt-7 h-[400px] m-auto w-7xl">
-          <div class="w-[1500px]">
-            <img class="w-full" src="@/assets/Frame.png" alt="" />
-          </div>
+        <div class="h-[400px] container mx-auto">
+          <LineCharts/>
         </div>
       </div>
     </div>
@@ -82,6 +80,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { ApiServices } from '@/service/ApiService.ts'
+import LineCharts from '@/components/LineCharts.vue'
 const dashboardForm = ref([])
 
 const loadDashboard = async () => {

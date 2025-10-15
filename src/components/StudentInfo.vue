@@ -4,7 +4,7 @@
       <div class="w-7xl m-auto h-full flex items-center justify-between">
         <div class="flex items-center justify-between gap-4">
           <button
-            class="bg-gray-200 flex cursor-pointer w-10 items-center justify-center h-8 rounded-sm"
+            class="bg-gray-200 flex hover:bg-gray-300 cursor-pointer w-10 items-center justify-center h-8 rounded-sm"
             @click="closeFormPage"
           >
             <img src="@/assets/arrowLeft.png" alt="" />
