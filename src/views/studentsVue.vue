@@ -239,7 +239,7 @@ const studentClick = (student) => {
 const allStudents = async () => {
   try {
     const response = await ApiService.getAllStudents()
-    getStudentsAll.value = response?.results
+    getStudentsAll.value = response?.['results']
   } catch (error) {
     console.log(error)
   }
