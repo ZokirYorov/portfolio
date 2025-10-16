@@ -29,7 +29,7 @@
           <div class="flex h-full w-[420px] items-center justify-between">
             <div class="flex rounded w-[280px] p-2 gap-2 bg-[#E8E8E8] items-center">
               <img src="@/assets/search.png" alt="" />
-              <input class="w-full p-1" type="text" v-model="searchText" placeholder="Izlash" />
+              <input class="w-full p-1" type="text" v-model="searchText" placeholder="Izlash (F.I.SH yoki tel raqam)" />
             </div>
             <button
               @click="formVisible()"
@@ -71,15 +71,19 @@
           </thead>
           <tbody>
             <tr
-              v-for="(sponsor, index) in sponsorList"
+              v-for="(sponsor, index) in filteredSponsors"
               :key="index"
               class="bg-white mt-3 rounded-md p-4 hover:bg-gray-50"
             >
               <td class="px-2">{{ index + 1 }}</td>
               <td class="px-2 text-left">{{ sponsor['full_name'] }}</td>
               <td class="px-2 text-center">{{ sponsor.phone }}</td>
-              <td class="px-2 flex items-center justify-center gap-2 h-full">{{ sponsor['sum'] }}<span class="text-gray-400">UZS</span></td>
-              <td class="px-2 text-center gap-2">{{ sponsor['spent'] }}<span class="text-gray-400">UZS</span></td>
+              <td class="px-2 flex items-center justify-center gap-2 h-full">
+                {{ sponsor['sum'] }}<span class="text-gray-400">UZS</span>
+              </td>
+              <td class="px-2 text-center gap-2">
+                {{ sponsor['spent'] }}<span class="text-gray-400">UZS</span>
+              </td>
               <td class="px-2 text-center">{{ formatDate(sponsor['created_at']) }}</td>
               <td :class="['px-2 text-center', sponsorsStatuses[sponsor['get_status_display']]]">
                 {{ sponsor['get_status_display'] }}
@@ -122,9 +126,10 @@
               id="status"
               class="border rounded-lg bg-[#E0E7FF33] border-[#E0E7FF] p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" disabled>Barchasi</option>
-              <option v-for="(item, index) in sponsorList" :key="index">
-                {{ item['get_status_display'] }}
+              <option value="">Barchasi</option>
+              <option v-for="(item, index) in sponsorList" :key="index" :value="item">
+<!--                {{ item['get_status_display'] }}-->
+                {{item['get_status_display']}}
               </option>
             </select>
           </div>
@@ -148,7 +153,6 @@
                   Barchasi
                 </button>
                 <button
-                  @click="selectItem(item.id)"
                   v-for="(item, index) in allMoneys"
                   :key="index"
                   :class="
@@ -156,6 +160,7 @@
                       ? 'border-2 border-[#2E5BFF]'
                       : 'border border-[#E0E7FF]'
                   "
+                  @click="selectedSum = item.id"
                   class="flex relative cursor-pointer bg-[#FFFFFF] gap-0.5 font-500 items-center justify-center rounded-sm w-[120px] h-13"
                 >
                   <img
@@ -186,6 +191,8 @@
               <img src="@/assets/clear.png" alt="" /> Tozalash
             </button>
             <button
+              @click="clickFilterVisibleClose"
+              type="button"
               class="flex cursor-pointer text-white rounded px-8 py-2 gap-[10px] hover:bg-blue-400 bg-[#3366FF]"
             >
               <img src="@/assets/eye2.png" alt="" />Natijalarni ko'rish
@@ -198,23 +205,22 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiServices } from '@/service/ApiService.ts'
 import Sponsor from '@/components/Sponsor.vue'
 
 const router = useRouter()
 const filterVisible = ref(false)
-const searchText = ref<number | ''>('')
+const searchText = ref('')
 const selectedStatus = ref('')
-const dataInput = ref<number | null>();
-const visibleSponsorForm = ref(false);
+const dataInput = ref<string>('')
+const visibleSponsorForm = ref(false)
 
 const sponsorList = ref([])
 const allMoneys = ref<any[]>([])
-const selectedSum = ref<string | number | null>(null)
+const selectedSum = ref<string | number | null>('all')
 const selectedSponsor = ref(null)
-
 
 const sponsorsStatuses: Record<string, string> = {
   Yangi: 'text-[#5BABF2]',
@@ -254,10 +260,15 @@ const selectItem = (id: number) => {
   selectedSum.value = id
 }
 
-const clearAll = (item) => {
+const clickFilterVisibleClose = () => {
+  filterVisible.value = false
+}
+
+const clearAll = () => {
   selectedStatus.value = ''
-  selectedSum.value = item
-  dataInput.value = null
+  selectedSum.value = 'all'
+  dataInput.value = ''
+  searchText.value = ''
 }
 
 const formatDate = (isoString: string): string => {
@@ -270,14 +281,42 @@ const formatDate = (isoString: string): string => {
 
 const clickSponsor = (item) => {
   selectedSponsor.value = item
-  visibleSponsorForm.value= true
+  visibleSponsorForm.value = true
 }
+
+const filteredSponsors = computed(() => {
+  return sponsorList.value.filter((item) => {
+    const search = searchText.value.trim().toLowerCase()
+
+    const matchesSearch =
+      item['full_name'].toLowerCase().includes(search) ||
+      item['phone'].includes(search)
+
+    const matchesStatus =
+      selectedStatus.value
+        ? item['get_status_display'] === selectedStatus.value
+        : true
+
+    const matchesSum =
+      selectedSum.value === "all"
+        ? true
+        : item['sum_id'] === selectedSum.value
+
+    const matchesDate = dataInput.value
+      ? item['created_at']?.startsWith(dataInput.value)
+      : true
+
+    return matchesSearch && matchesStatus && matchesSum && matchesDate
+  })
+})
 
 onMounted(() => {
   getSponsorsList()
   loadAllMoney()
 })
-watch([searchText], () => {})
+watch( filteredSponsors, (val) => {
+  console.log("Filtrlanganlar", val)
+})
 </script>
 
 <style scoped>

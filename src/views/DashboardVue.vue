@@ -39,14 +39,13 @@
         </div>
       </div>
       <div class="flex w-7xl m-auto py-12 flex-col">
-        <div class="flex h-[96px] justify-between w-full"
-        >
+        <div class="flex h-[96px]  justify-between w-full">
           <div class="flex gap-4 h-full p-6 w-[380px] bg-white rounded-md">
             <img class="w-12 h-12" src="@/assets/money.png" alt="" />
             <div class="flex flex-col h-9 w-full">
-              <span class="flex text-sm text-[#7A7A9D]">Jami to'langan summa</span>
-              <span class="flex gap-1.5 text-xl"
-                >{{dashboardForm?.["total_must_pay"]}} <span class="text-[#B2B7C1]">UZS</span>
+              <span class="text-sm font-normal font-rubik text-[#7A7A9D]">Jami to'langan summa</span>
+              <span class="flex gap-1.5 font-medium text-xl"
+                >{{ dashboardForm?.['total_must_pay'] }} <span class="text-[#B2B7C1]">UZS</span>
               </span>
             </div>
           </div>
@@ -54,8 +53,8 @@
             <img class="w-12 h-12 text-[#EDC7001A]" src="@/assets/money2.png" alt="" />
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">Jami so'ralgan summa</span>
-              <span class="flex gap-1.5 text-xl"
-                >{{dashboardForm?.["total_need"]}}<span class="text-[#B2B7C1]">UZS</span>
+              <span class="flex gap-1.5 font-medium text-xl"
+                >{{ dashboardForm?.['total_need'] }}<span class="text-[#B2B7C1]">UZS</span>
               </span>
             </div>
           </div>
@@ -63,14 +62,14 @@
             <img class="w-12 h-12" src="@/assets/money3.png" alt="" />
             <div class="flex flex-col h-9 w-full">
               <span class="flex text-sm text-[#7A7A9D]">To'lanishi kerak summa</span>
-              <span class="flex gap-1.5 text-xl"
-                >{{dashboardForm?.["total_paid"]}}<span class="text-[#B2B7C1]">UZS</span>
+              <span class="flex gap-1.5 font-medium text-xl"
+                >{{ dashboardForm?.['total_paid'] }}<span class="text-[#B2B7C1]">UZS</span>
               </span>
             </div>
           </div>
         </div>
         <div class="h-[400px] container mx-auto">
-          <LineCharts/>
+          <LineCharts />
         </div>
       </div>
     </div>
@@ -78,19 +77,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from 'vue'
 import { ApiServices } from '@/service/ApiService.ts'
 import LineCharts from '@/components/LineCharts.vue'
 const dashboardForm = ref([])
 
 const loadDashboard = async () => {
   try {
-    const response = await ApiServices.getDashboard();
-    dashboardForm.value = response ? response : null;
-    console.log(dashboardForm.value);
-  }
-  catch (error) {
-    console.error(error);
+    const response = await ApiServices.getDashboard()
+    dashboardForm.value = response ? response : null
+    console.log(dashboardForm.value)
+  } catch (error) {
+    console.error(error)
   }
 }
 

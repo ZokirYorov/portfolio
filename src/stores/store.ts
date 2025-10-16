@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
       if (savedStudents) this.students = JSON.parse(savedStudents)
     },
 
-    setStudents(students: any) {
+    setStudents(students: CreatedStudent[]) {
       this.students = students
       localStorage.setItem('students', JSON.stringify(students))
     },
